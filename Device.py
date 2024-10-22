@@ -6,26 +6,44 @@ class CATCommand():
     AFGain          = "AG"
     RealTimeFB      = "AI"
     BandControl     = "BC"
+    Beacon          = "BE"
     BatteryLevel    = "BL"
-    Squelch         = "BY"
+    Bluetooth       = "BT"
+    SquelchOpen     = "BY"
     DualSingleBand  = "DL"
     BtnDown         = "DW"
     Frequency       = "FQ"
     FWVersion       = "FV"
+    GPS             = "GP"
     ModelID         = "ID"
+
+    # 0 = Manual
+    # 1 = On
+    # 2 = Auto
+    # 3 = Auto (DC-IN)
+    Backlight       = "LC"
     BandMode        = "MD"
     MemChannel      = "MR"
-    TX              = "TX"
+    OutputPower     = "PC"
+    BeaconType      = "PT"
     RX              = "RX"
     S_Meter         = "SM"
+    Squelch         = "SQ"
+    TNC             = "TN"
+    TX              = "TX"
     BtnUp           = "UP"
     MemoryMode      = "VM"
+
+    
+
 class Device(QObject):
 
     DISCONNECTED        = 1
     CONNECTING          = 2
     CONNECTED           = 3
     FORCE_DISCONNECTED  = 4
+
+    verbose         = False
 
     serial_port     = None
     status          = DISCONNECTED
@@ -38,6 +56,10 @@ class Device(QObject):
     band_idx        = 0
     dv_mode         = False
     memory_mode     = False
+    band_idx        = 2
+
+    band_a_squelch  = 0
+    band_b_squelch  = 0
 
     error_occurred          = Signal(str, str)
     update_model_id         = Signal(str)
@@ -52,8 +74,15 @@ class Device(QObject):
     update_memory_mode      = Signal(int, int)
     update_s_meter          = Signal(int, int)
     update_af_gain          = Signal(int)
-    update_mem_channel      = Signal(str)
+    update_mem_channel      = Signal(int, str)
     update_dual_band        = Signal(int)
+    update_backlight        = Signal(int)
+    update_bt_enabled       = Signal(bool)
+    update_gps              = Signal(bool, bool)
+    update_squelch          = Signal(int, int)
+    update_tnc              = Signal(int, int)
+    update_beacon_type      = Signal(int)
+    update_output_power     = Signal(int, int)
     
     command_buffer = []
 
@@ -83,18 +112,27 @@ class Device(QObject):
             self.getDualSingleBand()
             self.getBandControl()
             self.getAfGain()
+            self.getBacklight()
+            self.getBtEnabled()
+            self.getGPS()
+            self.getTNC()
+            self.getBeaconType()
 
             #Band A
             self.getMemoryMode(0)
             self.getBandMode(0)
             self.getBandFrequency(0)
             self.getMeter(0)
+            self.getSquelch(0)
+            self.getOutputPower(0)
 
             #Band B
             self.getMemoryMode(1)
             self.getBandMode(1)
             self.getBandFrequency(1)
             self.getMeter(1)
+            self.getSquelch(1)
+            self.getOutputPower(1)
             return True
         
         print("Failed to connect to device!")
@@ -102,16 +140,15 @@ class Device(QObject):
     
     def serialPortError(self, error):
         if error == QSerialPort.SerialPortError.ResourceError or error == QSerialPort.SerialPortError.DeviceNotFoundError:
-            if self.status != Device.CONNECTING:
-                self.updated.emit(self)
+            self.error_occurred.emit(self)
+                
 
     def write(self, cmd, payload=None):
+        
         if payload == None:
             data = (cmd + '\r').encode("UTF-8")
         else:
             data = (cmd + " " + payload + '\r').encode("UTF-8")
-        
-
         
         self.command_buffer.append(data)
 
@@ -121,6 +158,7 @@ class Device(QObject):
     def writeData(self, data):
         if self.serial_conn.isOpen():
             # print("W:", self.command_buffer[0])
+            if self.verbose: print('W: ', data)
             self.last_command = self.command_buffer[0].split()[0]
             self.serial_conn.write(data)
         else:
@@ -131,9 +169,9 @@ class Device(QObject):
         data = self.serial_conn.readAll().data().strip()
 
         if(data == b'?'):
-            print("Invalid Command: " + str(self.command_buffer[0]))
+            if len(self.command_buffer) > 0: print("Invalid Command: " + str(self.command_buffer[0]))
         elif(data == b'N'):
-            print("Command rejected: " + str(self.command_buffer[0]))
+            if len(self.command_buffer) > 0: print("Command rejected: " + str(self.command_buffer[0]))
         else:
             self.parseCommand(data)
 
@@ -145,56 +183,103 @@ class Device(QObject):
 
     def parseCommand(self, serial_data):
         data = serial_data.decode("UTF-8").strip()
-        
+
         exploded_data = data.split()
         command = exploded_data[0]
         command_data = ""
+
         if(len(exploded_data) > 1):
             command_data = exploded_data[1].split(',')
+
+        if self.verbose: print('R: ', command, command_data)
 
         if(command == CATCommand.SerialNumber):
             self.serial_number = command_data[0]
             self.radio_type = command_data[1]
             self.update_serial_number.emit(self.serial_number)
+
         elif(command == CATCommand.FWVersion):
             self.fw_version = command_data[0]
             self.update_fw.emit(self.fw_version)
+
         elif command == CATCommand.RealTimeFB:
             self.update_auto_feedback.emit(command_data[0] == "1")
+
         elif command == CATCommand.BandControl:
             self.update_band_control.emit(int(command_data[0]))
             self.band_idx = int(command_data[0])
+            if self.memory_mode == 1:
+                self.getBandChannel(self.band_idx)
             
         elif command == CATCommand.ModelID:
             self.update_model_id.emit(command_data[0])
+
         elif command == CATCommand.BandMode:
+            if self.memory_mode == 1:
+                self.getBandChannel(self.band_idx)
             self.update_band_mode.emit(int(command_data[0]), int(command_data[1]))
+
         elif command == CATCommand.Frequency:
             frequency = str(int(command_data[1][:4])) + "." + command_data[1][4:7]
             self.update_band_frequency.emit(int(command_data[0]), frequency)
-
             if self.memory_mode:
                 self.getMemChannel(int(command_data[0]))
+
         elif command == CATCommand.MemoryMode:
             self.memory_mode = int(command_data[1]) == 1
             self.update_memory_mode.emit(int(command_data[0]), int(command_data[1]))
+            if self.memory_mode == 1:
+                self.getBandChannel(self.band_idx)
+
         elif command == CATCommand.TX:
             self.update_tx.emit(True)
+
         elif command == CATCommand.RX:
             self.update_tx.emit(False)
-        elif command == CATCommand.Squelch:
+
+        elif command == CATCommand.SquelchOpen:
             if int(command_data[1]) == 0:
                 self.update_s_meter.emit(int(command_data[0]), 0)
             else:
                 self.getMeter(command_data[0])
+
         elif command == CATCommand.S_Meter:
             self.update_s_meter.emit(int(command_data[0]), int(command_data[1]))
+
         elif command == CATCommand.AFGain:
             self.update_af_gain.emit(int(command_data[0]))
+
         elif command == CATCommand.MemChannel:
-            self.update_mem_channel.emit(command_data[0])
+            self.update_mem_channel.emit(self.band_idx, command_data[0])
+
         elif command == CATCommand.DualSingleBand:
             self.update_dual_band.emit(int(command_data[0]))
+
+        elif command == CATCommand.Backlight:
+            self.update_backlight.emit(int(command_data[0]))
+
+        elif command == CATCommand.Bluetooth:
+            self.update_bt_enabled.emit(int(command_data[0])==1)
+
+        elif command == CATCommand.GPS:
+            self.update_gps.emit(int(command_data[0])==1, int(command_data[1])==1)
+        
+        elif command == CATCommand.Squelch:
+            if int(command_data[0]) == 0:
+                self.band_a_squelch = int(command_data[1])
+            else:
+                self.band_b_squelch = int(command_data[1])
+            self.update_squelch.emit(int(command_data[0]), int(command_data[1]))
+
+        elif command == CATCommand.TNC:
+            self.update_tnc.emit(int(command_data[0]), int(command_data[1]))
+
+        elif command == CATCommand.BeaconType:
+            self.update_beacon_type.emit(int(command_data[0]))
+
+        elif command == CATCommand.OutputPower:
+            self.update_output_power.emit(int(command_data[0]), int(command_data[1]))
+
         else:
             print(command, command_data)
 
@@ -243,6 +328,11 @@ class Device(QObject):
         self.getBandMode()
         self.getBandFrequency()
 
+    def getBandChannel(self, band_idx):
+        self.write(CATCommand.MemChannel, str(band_idx))
+    def setBandChannel(self, band_idx, channel):
+        padded_channel = str(channel).ljust(3,'0')
+        self.write(CATCommand.MemChannel, str(band_idx)+ ","+ padded_channel)
     def getBandFrequency(self, band_idx=None):
         if band_idx == None: band_idx = self.band_idx
         if band_idx == None: return
@@ -261,6 +351,7 @@ class Device(QObject):
         self.write(CATCommand.DualSingleBand)
     def setDualSingleBand(self, opt):
         self.write(CATCommand.DualSingleBand, str(opt))
+    
     def getAfGain(self):
         self.write(CATCommand.AFGain)
     def setAfGain(self, level):
@@ -275,6 +366,43 @@ class Device(QObject):
         if band_idx == None: band_idx = self.band_idx
         if band_idx == None: return
         self.write(CATCommand.MemChannel, str(band_idx) + ',' + str(channel))
+
+    def getBacklight(self):
+        self.write(CATCommand.Backlight)
+    def setBacklight(self, enabled):
+        self.write(CATCommand.Backlight, str(1 if enabled else 0))
+                   
+    def getBtEnabled(self):
+        self.write(CATCommand.Bluetooth)
+    def setBtEnabled(self, enabled):
+        self.write(CATCommand.Bluetooth, str(1 if enabled else 0))
+
+    def getGPS(self):
+        self.write(CATCommand.GPS)
+    def setGPS(self, enabled, pc_out):
+        self.write(CATCommand.GPS, str(1 if enabled else 0) + ',' + str(1 if pc_out else 0))
+
+    def getSquelch(self, band_idx):
+        self.write(CATCommand.Squelch, str(band_idx))
+    def setSquelch(self, band_idx, level):
+        self.write(CATCommand.Squelch, str(band_idx) + ',' + str(level))
+
+    def getTNC(self):
+        self.write(CATCommand.TNC)
+    def setTNC(self, mode, band_idx):
+        self.write(CATCommand.TNC, str(mode) + ',' + str(band_idx))
+
+    def getBeaconType(self):
+        self.write(CATCommand.BeaconType)
+    def setBeaconType(self, beacon_type_idx):
+        self.write(CATCommand.BeaconType, str(beacon_type_idx))
+        # Sending the BEACON command causes the serial to freeze
+        # if beacon_type_idx != 0: self.write(CATCommand.Beacon)
+
+    def getOutputPower(self, band_idx):
+        self.write(CATCommand.OutputPower, str(band_idx))
+    def setOutputPower(self, band_idx, pwr):
+        self.write(CATCommand.OutputPower, str(band_idx) + ',' + str(pwr))
 
     def upButton(self):
         self.write(CATCommand.BtnUp)
