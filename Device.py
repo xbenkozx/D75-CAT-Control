@@ -350,8 +350,6 @@ class Device(QObject):
 
         data = self.serial_conn.readAll().data().strip()
 
-        print("D:", data)
-
         if(data == b'?'):
             if len(self.command_buffer) > 0: 
                 print("Invalid Command: " + str(self.command_buffer[0]))
