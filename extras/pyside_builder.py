@@ -2,7 +2,8 @@ import os
 
 file_list = [
     ['main_window.ui', 'ui_main_window.py'],
-    ['com_port_dialog.ui', 'ui_com_port_dialog.py']
+    ['com_port_dialog.ui', 'ui_com_port_dialog.py'],
+    ['about_dialog.ui', 'ui_about_dialog.py']
 ]
 
 #Build PyQt UI files for PySide6 and PySide2

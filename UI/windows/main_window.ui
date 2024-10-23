@@ -7,20 +7,60 @@
     <x>0</x>
     <y>0</y>
     <width>862</width>
-    <height>429</height>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>D74/75 CAT Control Software</string>
   </property>
   <property name="toolButtonStyle">
-   <enum>Qt::ToolButtonStyle::ToolButtonTextOnly</enum>
+   <enum>Qt::ToolButtonIconOnly</enum>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="widget_29" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_15">
+       <item>
+        <widget class="QPushButton" name="comPortBtn">
+         <property name="text">
+          <string>Port...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="portConnectBtn">
+         <property name="text">
+          <string>Connect</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="aboutDialogBtn">
+         <property name="text">
+          <string>About</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item>
      <widget class="QWidget" name="widget_7" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -78,49 +118,36 @@
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="txBtn">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>TX</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QWidget" name="widget_27" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_20">
+          <item>
+           <widget class="QPushButton" name="txBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>20</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>TX</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QPushButton" name="upBtn">
             <property name="text">
@@ -142,7 +169,7 @@
         <widget class="QWidget" name="widget_4" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <property name="spacing">
-           <number>0</number>
+           <number>4</number>
           </property>
           <item>
            <widget class="QWidget" name="widget_8" native="true">
@@ -163,14 +190,14 @@
                 <number>193</number>
                </property>
                <property name="orientation">
-                <enum>Qt::Orientation::Horizontal</enum>
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
             </layout>
            </widget>
           </item>
-          <item alignment="">
+          <item alignment="Qt::AlignLeft">
            <widget class="QWidget" name="widget_5" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <property name="topMargin">
@@ -220,6 +247,12 @@
             </layout>
            </widget>
           </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_11" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
@@ -263,11 +296,50 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QPushButton" name="beaconBtn">
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>BCON</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -275,7 +347,7 @@
     <item>
      <widget class="Line" name="line_3">
       <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
@@ -286,16 +358,67 @@
         <widget class="QWidget" name="bandAWidget" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_15">
           <item>
-           <widget class="QLabel" name="label_5">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Band A</string>
-            </property>
+           <widget class="QWidget" name="widget_13" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Band A</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="bandAChannelLbl">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Ch:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="bandAChannelCbx">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -344,7 +467,7 @@
                 <string>MONI</string>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonStyle::ToolButtonTextOnly</enum>
+                <enum>Qt::ToolButtonIconOnly</enum>
                </property>
                <property name="autoRaise">
                 <bool>true</bool>
@@ -390,42 +513,146 @@
                 <item>
                  <widget class="QWidget" name="widget" native="true">
                   <layout class="QHBoxLayout" name="horizontalLayout">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>9</number>
+                   </property>
                    <item>
-                    <widget class="QLabel" name="bandAChannelLbl">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>25</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>12</pointsize>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Ch:</string>
-                     </property>
+                    <widget class="QWidget" name="widget_28" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_5">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_6">
+                        <property name="text">
+                         <string>Tone</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandAToneCbx"/>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="bandAChannelCbx">
-                     <property name="minimumSize">
-                      <size>
-                       <width>100</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="editable">
-                      <bool>true</bool>
-                     </property>
+                    <widget class="QWidget" name="bandACrossWrapper" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_21">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_10">
+                        <property name="text">
+                         <string>Cross</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandACrossCbx"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="bandAEncodeWrapper" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_7">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="bandATSelLbl">
+                        <property name="text">
+                         <string>T. Sel</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandAEncodeCbx"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="bandADecodeWrapper" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_22">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_7">
+                        <property name="text">
+                         <string>Decode</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandADecodeCbx"/>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                    <item>
                     <spacer name="horizontalSpacer">
                      <property name="orientation">
-                      <enum>Qt::Orientation::Horizontal</enum>
+                      <enum>Qt::Horizontal</enum>
                      </property>
                      <property name="sizeHint" stdset="0">
                       <size>
@@ -451,7 +678,7 @@
                     <number>6</number>
                    </property>
                    <property name="sizeConstraint">
-                    <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+                    <enum>QLayout::SetDefaultConstraint</enum>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -490,9 +717,6 @@
                      </property>
                      <property name="cursorPosition">
                       <number>7</number>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -595,16 +819,67 @@
         <widget class="QWidget" name="bandBWidget" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QLabel" name="label_4">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Band B</string>
-            </property>
+           <widget class="QWidget" name="widget_20" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Band B</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="bandBChannelLbl">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Ch:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="bandBChannelCbx">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -644,7 +919,7 @@
                 <string>MONI</string>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonStyle::ToolButtonTextOnly</enum>
+                <enum>Qt::ToolButtonIconOnly</enum>
                </property>
                <property name="autoRaise">
                 <bool>true</bool>
@@ -690,42 +965,143 @@
                 <item>
                  <widget class="QWidget" name="widget_2" native="true">
                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
                    <item>
-                    <widget class="QLabel" name="bandBChannelLbl">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>25</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>12</pointsize>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Ch:</string>
-                     </property>
+                    <widget class="QWidget" name="widget_30" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_9">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_8">
+                        <property name="text">
+                         <string>Tone</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandBToneCbx"/>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="bandBChannelCbx">
-                     <property name="minimumSize">
-                      <size>
-                       <width>100</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="editable">
-                      <bool>true</bool>
-                     </property>
+                    <widget class="QWidget" name="bandBCrossWrapper" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_23">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_11">
+                        <property name="text">
+                         <string>Cross</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandBCrossCbx"/>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                    <item>
-                    <spacer name="horizontalSpacer_3">
+                    <widget class="QWidget" name="bandBEncodeWrapper" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_10">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_9">
+                        <property name="text">
+                         <string>T Sel</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandBEncodeCbx"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="bandBDecodeWrapper" native="true">
+                     <layout class="QVBoxLayout" name="verticalLayout_24">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_12">
+                        <property name="text">
+                         <string>Decode</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="bandBDecodeCbx"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_2">
                      <property name="orientation">
-                      <enum>Qt::Orientation::Horizontal</enum>
+                      <enum>Qt::Horizontal</enum>
                      </property>
                      <property name="sizeHint" stdset="0">
                       <size>
@@ -751,7 +1127,7 @@
                     <number>6</number>
                    </property>
                    <property name="sizeConstraint">
-                    <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+                    <enum>QLayout::SetDefaultConstraint</enum>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -790,9 +1166,6 @@
                      </property>
                      <property name="cursorPosition">
                       <number>7</number>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -897,7 +1270,7 @@
     <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
+       <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -908,31 +1281,6 @@
      </spacer>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>862</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuRadio">
-    <property name="title">
-     <string>Radio</string>
-    </property>
-    <addaction name="actionPort"/>
-    <addaction name="actionConnect"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuRadio"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionPort">

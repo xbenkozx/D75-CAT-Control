@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'main_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.2
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -18,16 +18,16 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QMainWindow, QMenu, QMenuBar, QProgressBar,
-    QPushButton, QSizePolicy, QSlider, QSpacerItem,
-    QStatusBar, QToolButton, QVBoxLayout, QWidget)
+    QMainWindow, QProgressBar, QPushButton, QSizePolicy,
+    QSlider, QSpacerItem, QStatusBar, QToolButton,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(862, 429)
-        MainWindow.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+        MainWindow.resize(862, 530)
+        MainWindow.setToolButtonStyle(Qt.ToolButtonIconOnly)
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
         self.actionPort = QAction(MainWindow)
         self.actionPort.setObjectName(u"actionPort")
@@ -39,6 +39,32 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.widget_29 = QWidget(self.centralwidget)
+        self.widget_29.setObjectName(u"widget_29")
+        self.horizontalLayout_15 = QHBoxLayout(self.widget_29)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.comPortBtn = QPushButton(self.widget_29)
+        self.comPortBtn.setObjectName(u"comPortBtn")
+
+        self.horizontalLayout_15.addWidget(self.comPortBtn)
+
+        self.portConnectBtn = QPushButton(self.widget_29)
+        self.portConnectBtn.setObjectName(u"portConnectBtn")
+
+        self.horizontalLayout_15.addWidget(self.portConnectBtn)
+
+        self.aboutDialogBtn = QPushButton(self.widget_29)
+        self.aboutDialogBtn.setObjectName(u"aboutDialogBtn")
+
+        self.horizontalLayout_15.addWidget(self.aboutDialogBtn)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_6)
+
+
+        self.verticalLayout.addWidget(self.widget_29)
+
         self.widget_7 = QWidget(self.centralwidget)
         self.widget_7.setObjectName(u"widget_7")
         self.horizontalLayout_3 = QHBoxLayout(self.widget_7)
@@ -71,13 +97,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addWidget(self.widget_10)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_3.addItem(self.horizontalSpacer_2)
-
-        self.txBtn = QPushButton(self.widget_7)
+        self.widget_27 = QWidget(self.widget_7)
+        self.widget_27.setObjectName(u"widget_27")
+        self.verticalLayout_20 = QVBoxLayout(self.widget_27)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.txBtn = QPushButton(self.widget_27)
         self.txBtn.setObjectName(u"txBtn")
-        sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.txBtn.sizePolicy().hasHeightForWidth())
@@ -89,12 +115,8 @@ class Ui_MainWindow(object):
         self.txBtn.setFont(font1)
         self.txBtn.setStyleSheet(u"")
 
-        self.horizontalLayout_3.addWidget(self.txBtn)
+        self.verticalLayout_20.addWidget(self.txBtn)
 
-        self.widget_27 = QWidget(self.widget_7)
-        self.widget_27.setObjectName(u"widget_27")
-        self.verticalLayout_20 = QVBoxLayout(self.widget_27)
-        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
         self.upBtn = QPushButton(self.widget_27)
         self.upBtn.setObjectName(u"upBtn")
 
@@ -111,7 +133,7 @@ class Ui_MainWindow(object):
         self.widget_4 = QWidget(self.widget_7)
         self.widget_4.setObjectName(u"widget_4")
         self.verticalLayout_3 = QVBoxLayout(self.widget_4)
-        self.verticalLayout_3.setSpacing(0)
+        self.verticalLayout_3.setSpacing(4)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.widget_8 = QWidget(self.widget_4)
         self.widget_8.setObjectName(u"widget_8")
@@ -126,7 +148,7 @@ class Ui_MainWindow(object):
         self.volumeSlider.setObjectName(u"volumeSlider")
         self.volumeSlider.setMinimum(6)
         self.volumeSlider.setMaximum(193)
-        self.volumeSlider.setOrientation(Qt.Orientation.Horizontal)
+        self.volumeSlider.setOrientation(Qt.Horizontal)
 
         self.verticalLayout_6.addWidget(self.volumeSlider)
 
@@ -164,14 +186,21 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.addWidget(self.gpsPcOutChbx)
 
 
-        self.verticalLayout_3.addWidget(self.widget_5)
+        self.verticalLayout_3.addWidget(self.widget_5, 0, Qt.AlignLeft)
 
-        self.label_2 = QLabel(self.widget_4)
+
+        self.horizontalLayout_3.addWidget(self.widget_4)
+
+        self.widget_11 = QWidget(self.widget_7)
+        self.widget_11.setObjectName(u"widget_11")
+        self.verticalLayout_4 = QVBoxLayout(self.widget_11)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.label_2 = QLabel(self.widget_11)
         self.label_2.setObjectName(u"label_2")
 
-        self.verticalLayout_3.addWidget(self.label_2)
+        self.verticalLayout_4.addWidget(self.label_2)
 
-        self.widget_6 = QWidget(self.widget_4)
+        self.widget_6 = QWidget(self.widget_11)
         self.widget_6.setObjectName(u"widget_6")
         self.horizontalLayout_11 = QHBoxLayout(self.widget_6)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
@@ -191,19 +220,33 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_11.addWidget(self.beaconCbx)
 
+        self.beaconBtn = QPushButton(self.widget_6)
+        self.beaconBtn.setObjectName(u"beaconBtn")
+        self.beaconBtn.setMaximumSize(QSize(50, 25))
 
-        self.verticalLayout_3.addWidget(self.widget_6)
+        self.horizontalLayout_11.addWidget(self.beaconBtn)
 
 
-        self.horizontalLayout_3.addWidget(self.widget_4)
+        self.verticalLayout_4.addWidget(self.widget_6)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_2)
+
+
+        self.horizontalLayout_3.addWidget(self.widget_11)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_3)
 
 
         self.verticalLayout.addWidget(self.widget_7)
 
         self.line_3 = QFrame(self.centralwidget)
         self.line_3.setObjectName(u"line_3")
-        self.line_3.setFrameShape(QFrame.HLine)
-        self.line_3.setFrameShadow(QFrame.Sunken)
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout.addWidget(self.line_3)
 
@@ -215,14 +258,39 @@ class Ui_MainWindow(object):
         self.bandAWidget.setObjectName(u"bandAWidget")
         self.verticalLayout_15 = QVBoxLayout(self.bandAWidget)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.label_5 = QLabel(self.bandAWidget)
+        self.widget_13 = QWidget(self.bandAWidget)
+        self.widget_13.setObjectName(u"widget_13")
+        self.horizontalLayout_13 = QHBoxLayout(self.widget_13)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.label_5 = QLabel(self.widget_13)
         self.label_5.setObjectName(u"label_5")
         font2 = QFont()
         font2.setPointSize(12)
         font2.setBold(True)
         self.label_5.setFont(font2)
 
-        self.verticalLayout_15.addWidget(self.label_5)
+        self.horizontalLayout_13.addWidget(self.label_5)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_4)
+
+        self.bandAChannelLbl = QLabel(self.widget_13)
+        self.bandAChannelLbl.setObjectName(u"bandAChannelLbl")
+        self.bandAChannelLbl.setMaximumSize(QSize(16777215, 25))
+        self.bandAChannelLbl.setFont(font2)
+
+        self.horizontalLayout_13.addWidget(self.bandAChannelLbl)
+
+        self.bandAChannelCbx = QComboBox(self.widget_13)
+        self.bandAChannelCbx.setObjectName(u"bandAChannelCbx")
+        self.bandAChannelCbx.setMinimumSize(QSize(100, 0))
+        self.bandAChannelCbx.setEditable(True)
+
+        self.horizontalLayout_13.addWidget(self.bandAChannelCbx)
+
+
+        self.verticalLayout_15.addWidget(self.widget_13)
 
         self.widget_3 = QWidget(self.bandAWidget)
         self.widget_3.setObjectName(u"widget_3")
@@ -247,7 +315,7 @@ class Ui_MainWindow(object):
         self.bandAMonitorBtn = QToolButton(self.widget_3)
         self.bandAMonitorBtn.setObjectName(u"bandAMonitorBtn")
         self.bandAMonitorBtn.setMinimumSize(QSize(25, 25))
-        self.bandAMonitorBtn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+        self.bandAMonitorBtn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.bandAMonitorBtn.setAutoRaise(True)
 
         self.horizontalLayout_9.addWidget(self.bandAMonitorBtn)
@@ -270,21 +338,84 @@ class Ui_MainWindow(object):
         self.widget.setObjectName(u"widget")
         self.horizontalLayout = QHBoxLayout(self.widget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.bandAChannelLbl = QLabel(self.widget)
-        self.bandAChannelLbl.setObjectName(u"bandAChannelLbl")
-        self.bandAChannelLbl.setMaximumSize(QSize(16777215, 25))
-        self.bandAChannelLbl.setFont(font2)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 9)
+        self.widget_28 = QWidget(self.widget)
+        self.widget_28.setObjectName(u"widget_28")
+        self.verticalLayout_5 = QVBoxLayout(self.widget_28)
+        self.verticalLayout_5.setSpacing(0)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.label_6 = QLabel(self.widget_28)
+        self.label_6.setObjectName(u"label_6")
 
-        self.horizontalLayout.addWidget(self.bandAChannelLbl)
+        self.verticalLayout_5.addWidget(self.label_6)
 
-        self.bandAChannelCbx = QComboBox(self.widget)
-        self.bandAChannelCbx.setObjectName(u"bandAChannelCbx")
-        self.bandAChannelCbx.setMinimumSize(QSize(100, 0))
-        self.bandAChannelCbx.setEditable(True)
+        self.bandAToneCbx = QComboBox(self.widget_28)
+        self.bandAToneCbx.setObjectName(u"bandAToneCbx")
 
-        self.horizontalLayout.addWidget(self.bandAChannelCbx)
+        self.verticalLayout_5.addWidget(self.bandAToneCbx)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addWidget(self.widget_28)
+
+        self.bandACrossWrapper = QWidget(self.widget)
+        self.bandACrossWrapper.setObjectName(u"bandACrossWrapper")
+        self.verticalLayout_21 = QVBoxLayout(self.bandACrossWrapper)
+        self.verticalLayout_21.setSpacing(0)
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.verticalLayout_21.setContentsMargins(0, 0, 0, 0)
+        self.label_10 = QLabel(self.bandACrossWrapper)
+        self.label_10.setObjectName(u"label_10")
+
+        self.verticalLayout_21.addWidget(self.label_10)
+
+        self.bandACrossCbx = QComboBox(self.bandACrossWrapper)
+        self.bandACrossCbx.setObjectName(u"bandACrossCbx")
+
+        self.verticalLayout_21.addWidget(self.bandACrossCbx)
+
+
+        self.horizontalLayout.addWidget(self.bandACrossWrapper)
+
+        self.bandAEncodeWrapper = QWidget(self.widget)
+        self.bandAEncodeWrapper.setObjectName(u"bandAEncodeWrapper")
+        self.verticalLayout_7 = QVBoxLayout(self.bandAEncodeWrapper)
+        self.verticalLayout_7.setSpacing(0)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.bandATSelLbl = QLabel(self.bandAEncodeWrapper)
+        self.bandATSelLbl.setObjectName(u"bandATSelLbl")
+
+        self.verticalLayout_7.addWidget(self.bandATSelLbl)
+
+        self.bandAEncodeCbx = QComboBox(self.bandAEncodeWrapper)
+        self.bandAEncodeCbx.setObjectName(u"bandAEncodeCbx")
+
+        self.verticalLayout_7.addWidget(self.bandAEncodeCbx)
+
+
+        self.horizontalLayout.addWidget(self.bandAEncodeWrapper)
+
+        self.bandADecodeWrapper = QWidget(self.widget)
+        self.bandADecodeWrapper.setObjectName(u"bandADecodeWrapper")
+        self.verticalLayout_22 = QVBoxLayout(self.bandADecodeWrapper)
+        self.verticalLayout_22.setSpacing(0)
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
+        self.label_7 = QLabel(self.bandADecodeWrapper)
+        self.label_7.setObjectName(u"label_7")
+
+        self.verticalLayout_22.addWidget(self.label_7)
+
+        self.bandADecodeCbx = QComboBox(self.bandADecodeWrapper)
+        self.bandADecodeCbx.setObjectName(u"bandADecodeCbx")
+
+        self.verticalLayout_22.addWidget(self.bandADecodeCbx)
+
+
+        self.horizontalLayout.addWidget(self.bandADecodeWrapper)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
@@ -297,7 +428,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7 = QHBoxLayout(self.widget_23)
         self.horizontalLayout_7.setSpacing(6)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.horizontalLayout_7.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.horizontalLayout_7.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.bandAFreqText = QLineEdit(self.widget_23)
         self.bandAFreqText.setObjectName(u"bandAFreqText")
@@ -309,7 +440,6 @@ class Ui_MainWindow(object):
         self.bandAFreqText.setMaxLength(7)
         self.bandAFreqText.setFrame(True)
         self.bandAFreqText.setCursorPosition(7)
-        self.bandAFreqText.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_7.addWidget(self.bandAFreqText)
 
@@ -377,11 +507,36 @@ class Ui_MainWindow(object):
         self.bandBWidget.setObjectName(u"bandBWidget")
         self.verticalLayout_2 = QVBoxLayout(self.bandBWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.label_4 = QLabel(self.bandBWidget)
+        self.widget_20 = QWidget(self.bandBWidget)
+        self.widget_20.setObjectName(u"widget_20")
+        self.horizontalLayout_14 = QHBoxLayout(self.widget_20)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.label_4 = QLabel(self.widget_20)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setFont(font2)
 
-        self.verticalLayout_2.addWidget(self.label_4)
+        self.horizontalLayout_14.addWidget(self.label_4)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_14.addItem(self.horizontalSpacer_5)
+
+        self.bandBChannelLbl = QLabel(self.widget_20)
+        self.bandBChannelLbl.setObjectName(u"bandBChannelLbl")
+        self.bandBChannelLbl.setMaximumSize(QSize(16777215, 25))
+        self.bandBChannelLbl.setFont(font2)
+
+        self.horizontalLayout_14.addWidget(self.bandBChannelLbl)
+
+        self.bandBChannelCbx = QComboBox(self.widget_20)
+        self.bandBChannelCbx.setObjectName(u"bandBChannelCbx")
+        self.bandBChannelCbx.setMinimumSize(QSize(100, 0))
+        self.bandBChannelCbx.setEditable(True)
+
+        self.horizontalLayout_14.addWidget(self.bandBChannelCbx)
+
+
+        self.verticalLayout_2.addWidget(self.widget_20)
 
         self.widget_9 = QWidget(self.bandBWidget)
         self.widget_9.setObjectName(u"widget_9")
@@ -404,7 +559,7 @@ class Ui_MainWindow(object):
         self.bandBMonitorBtn = QToolButton(self.widget_9)
         self.bandBMonitorBtn.setObjectName(u"bandBMonitorBtn")
         self.bandBMonitorBtn.setMinimumSize(QSize(25, 25))
-        self.bandBMonitorBtn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+        self.bandBMonitorBtn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.bandBMonitorBtn.setAutoRaise(True)
 
         self.horizontalLayout_12.addWidget(self.bandBMonitorBtn)
@@ -427,23 +582,86 @@ class Ui_MainWindow(object):
         self.widget_2.setObjectName(u"widget_2")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_2)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.bandBChannelLbl = QLabel(self.widget_2)
-        self.bandBChannelLbl.setObjectName(u"bandBChannelLbl")
-        self.bandBChannelLbl.setMaximumSize(QSize(16777215, 25))
-        self.bandBChannelLbl.setFont(font2)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, -1)
+        self.widget_30 = QWidget(self.widget_2)
+        self.widget_30.setObjectName(u"widget_30")
+        self.verticalLayout_9 = QVBoxLayout(self.widget_30)
+        self.verticalLayout_9.setSpacing(0)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.label_8 = QLabel(self.widget_30)
+        self.label_8.setObjectName(u"label_8")
 
-        self.horizontalLayout_2.addWidget(self.bandBChannelLbl)
+        self.verticalLayout_9.addWidget(self.label_8)
 
-        self.bandBChannelCbx = QComboBox(self.widget_2)
-        self.bandBChannelCbx.setObjectName(u"bandBChannelCbx")
-        self.bandBChannelCbx.setMinimumSize(QSize(100, 0))
-        self.bandBChannelCbx.setEditable(True)
+        self.bandBToneCbx = QComboBox(self.widget_30)
+        self.bandBToneCbx.setObjectName(u"bandBToneCbx")
 
-        self.horizontalLayout_2.addWidget(self.bandBChannelCbx)
+        self.verticalLayout_9.addWidget(self.bandBToneCbx)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_3)
+        self.horizontalLayout_2.addWidget(self.widget_30)
+
+        self.bandBCrossWrapper = QWidget(self.widget_2)
+        self.bandBCrossWrapper.setObjectName(u"bandBCrossWrapper")
+        self.verticalLayout_23 = QVBoxLayout(self.bandBCrossWrapper)
+        self.verticalLayout_23.setSpacing(0)
+        self.verticalLayout_23.setObjectName(u"verticalLayout_23")
+        self.verticalLayout_23.setContentsMargins(0, 0, 0, 0)
+        self.label_11 = QLabel(self.bandBCrossWrapper)
+        self.label_11.setObjectName(u"label_11")
+
+        self.verticalLayout_23.addWidget(self.label_11)
+
+        self.bandBCrossCbx = QComboBox(self.bandBCrossWrapper)
+        self.bandBCrossCbx.setObjectName(u"bandBCrossCbx")
+
+        self.verticalLayout_23.addWidget(self.bandBCrossCbx)
+
+
+        self.horizontalLayout_2.addWidget(self.bandBCrossWrapper)
+
+        self.bandBEncodeWrapper = QWidget(self.widget_2)
+        self.bandBEncodeWrapper.setObjectName(u"bandBEncodeWrapper")
+        self.verticalLayout_10 = QVBoxLayout(self.bandBEncodeWrapper)
+        self.verticalLayout_10.setSpacing(0)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.label_9 = QLabel(self.bandBEncodeWrapper)
+        self.label_9.setObjectName(u"label_9")
+
+        self.verticalLayout_10.addWidget(self.label_9)
+
+        self.bandBEncodeCbx = QComboBox(self.bandBEncodeWrapper)
+        self.bandBEncodeCbx.setObjectName(u"bandBEncodeCbx")
+
+        self.verticalLayout_10.addWidget(self.bandBEncodeCbx)
+
+
+        self.horizontalLayout_2.addWidget(self.bandBEncodeWrapper)
+
+        self.bandBDecodeWrapper = QWidget(self.widget_2)
+        self.bandBDecodeWrapper.setObjectName(u"bandBDecodeWrapper")
+        self.verticalLayout_24 = QVBoxLayout(self.bandBDecodeWrapper)
+        self.verticalLayout_24.setSpacing(0)
+        self.verticalLayout_24.setObjectName(u"verticalLayout_24")
+        self.verticalLayout_24.setContentsMargins(0, 0, 0, 0)
+        self.label_12 = QLabel(self.bandBDecodeWrapper)
+        self.label_12.setObjectName(u"label_12")
+
+        self.verticalLayout_24.addWidget(self.label_12)
+
+        self.bandBDecodeCbx = QComboBox(self.bandBDecodeWrapper)
+        self.bandBDecodeCbx.setObjectName(u"bandBDecodeCbx")
+
+        self.verticalLayout_24.addWidget(self.bandBDecodeCbx)
+
+
+        self.horizontalLayout_2.addWidget(self.bandBDecodeWrapper)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
 
         self.verticalLayout_11.addWidget(self.widget_2)
@@ -454,7 +672,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5 = QHBoxLayout(self.widget_16)
         self.horizontalLayout_5.setSpacing(6)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalLayout_5.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.horizontalLayout_5.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.bandBFreqText = QLineEdit(self.widget_16)
         self.bandBFreqText.setObjectName(u"bandBFreqText")
@@ -463,7 +681,6 @@ class Ui_MainWindow(object):
         self.bandBFreqText.setMaxLength(7)
         self.bandBFreqText.setFrame(True)
         self.bandBFreqText.setCursorPosition(7)
-        self.bandBFreqText.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_5.addWidget(self.bandBFreqText)
 
@@ -528,28 +745,14 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.widget_12)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 862, 17))
-        self.menuFile = QMenu(self.menubar)
-        self.menuFile.setObjectName(u"menuFile")
-        self.menuRadio = QMenu(self.menubar)
-        self.menuRadio.setObjectName(u"menuRadio")
-        MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
-        self.menubar.addAction(self.menuFile.menuAction())
-        self.menubar.addAction(self.menuRadio.menuAction())
-        self.menuFile.addAction(self.actionExit)
-        self.menuRadio.addAction(self.actionPort)
-        self.menuRadio.addAction(self.actionConnect)
 
         self.retranslateUi(MainWindow)
 
@@ -561,6 +764,9 @@ class Ui_MainWindow(object):
         self.actionPort.setText(QCoreApplication.translate("MainWindow", u"Port...", None))
         self.actionConnect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.comPortBtn.setText(QCoreApplication.translate("MainWindow", u"Port...", None))
+        self.portConnectBtn.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
+        self.aboutDialogBtn.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.bandControlCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Dual Band", None))
         self.bandCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Band A", None))
         self.radioUpdateChbx.setText(QCoreApplication.translate("MainWindow", u"Auto Update", None))
@@ -578,9 +784,14 @@ class Ui_MainWindow(object):
         self.tncModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Off", None))
         self.tncBandCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Band A", None))
         self.beaconCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Manual", None))
+        self.beaconBtn.setText(QCoreApplication.translate("MainWindow", u"BCON", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Band A", None))
-        self.bandAMonitorBtn.setText(QCoreApplication.translate("MainWindow", u"MONI", None))
         self.bandAChannelLbl.setText(QCoreApplication.translate("MainWindow", u"Ch:", None))
+        self.bandAMonitorBtn.setText(QCoreApplication.translate("MainWindow", u"MONI", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Tone", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Cross", None))
+        self.bandATSelLbl.setText(QCoreApplication.translate("MainWindow", u"T. Sel", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Decode", None))
         self.bandAFreqText.setText(QCoreApplication.translate("MainWindow", u"147.520", None))
         self.freq_ch_label_3.setText(QCoreApplication.translate("MainWindow", u"Mhz", None))
         self.bandAPwrCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"EL", None))
@@ -588,15 +799,17 @@ class Ui_MainWindow(object):
         self.bandAMemoryModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"VFO", None))
         self.bandAModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"FM", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Band B", None))
-        self.bandBMonitorBtn.setText(QCoreApplication.translate("MainWindow", u"MONI", None))
         self.bandBChannelLbl.setText(QCoreApplication.translate("MainWindow", u"Ch:", None))
+        self.bandBMonitorBtn.setText(QCoreApplication.translate("MainWindow", u"MONI", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Tone", None))
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"Cross", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"T Sel", None))
+        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Decode", None))
         self.bandBFreqText.setText(QCoreApplication.translate("MainWindow", u"147.520", None))
         self.freq_ch_label_2.setText(QCoreApplication.translate("MainWindow", u"Mhz", None))
         self.bandBPwrCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"EL", None))
         self.bandBMemoryModeCbx.setCurrentText("")
         self.bandBMemoryModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"VFO", None))
         self.bandBModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"FM", None))
-        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
-        self.menuRadio.setTitle(QCoreApplication.translate("MainWindow", u"Radio", None))
     # retranslateUi
 
