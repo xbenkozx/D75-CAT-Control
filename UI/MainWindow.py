@@ -23,7 +23,7 @@ Contact: k7dmg@protonmail.com
 Dependencies: PySide6==6.7.1, PySide6_Addons==6.7.1, PySide6_Essentials==6.7.1
 """
 
-import os, logging, configparser
+import os, logging, configparser, json
 from PySide6.QtCore import QTimer, QObject, QEvent
 from PySide6.QtWidgets import QDialog, QMessageBox, QMainWindow, QComboBox, QVBoxLayout, QLabel, QHBoxLayout, QStatusBar
 from PySide6.QtSerialPort import QSerialPortInfo
@@ -178,9 +178,15 @@ class MainWindow(QMainWindow):
         self.ui.bandASquelchCbx.currentIndexChanged.connect(self.setSquelchA)
         self.ui.bandBSquelchCbx.currentIndexChanged.connect(self.setSquelchB)
         
+        mem_names = [''] * 1000
+        if os.path.exists("channel_memory.json"):
+            with open("channel_memory.json", 'r') as f:
+                mem_names = json.loads(f.read())
         for i in range(999):
-            self.ui.bandAChannelCbx.addItem(str(i).rjust(3,'0'))
-            self.ui.bandBChannelCbx.addItem(str(i).rjust(3,'0'))
+            ch_name = str(i).rjust(3,'0')
+            if len(mem_names[i]): ch_name += " - " + mem_names[i]
+            self.ui.bandAChannelCbx.addItem(ch_name)
+            self.ui.bandBChannelCbx.addItem(ch_name)
         self.ui.bandAChannelCbx.currentIndexChanged.connect(self.setMemChannelA)
         self.ui.bandBChannelCbx.currentIndexChanged.connect(self.setMemChannelB)
 
@@ -591,12 +597,12 @@ class MainWindow(QMainWindow):
         self.mem_channel_a_input_lock = True
         self.mem_channel_a_input_timer.stop()
         self.mem_channel_a_input_timer.start()
-        self.setMemChannel(0, self.ui.bandAChannelCbx.currentText())
+        self.setMemChannel(0, self.ui.bandAChannelCbx.currentText()[:3])
     def setMemChannelB(self, idx):
         self.mem_channel_b_input_lock = True
         self.mem_channel_b_input_timer.stop()
         self.mem_channel_b_input_timer.start()
-        self.setMemChannel(1, self.ui.bandBChannelCbx.currentText())
+        self.setMemChannel(1, self.ui.bandBChannelCbx.currentText()[:3])
     def setMemChannel(self, band_idx, channel):
         if self.device != None: self.device.setMemChannel(str(channel).rjust(3,'0'), band_idx)
 
