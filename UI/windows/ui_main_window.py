@@ -352,6 +352,7 @@ class Ui_MainWindow(object):
 
         self.bandAToneCbx = QComboBox(self.widget_28)
         self.bandAToneCbx.setObjectName(u"bandAToneCbx")
+        self.bandAToneCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_5.addWidget(self.bandAToneCbx)
 
@@ -371,6 +372,7 @@ class Ui_MainWindow(object):
 
         self.bandACrossCbx = QComboBox(self.bandACrossWrapper)
         self.bandACrossCbx.setObjectName(u"bandACrossCbx")
+        self.bandACrossCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_21.addWidget(self.bandACrossCbx)
 
@@ -390,6 +392,7 @@ class Ui_MainWindow(object):
 
         self.bandAEncodeCbx = QComboBox(self.bandAEncodeWrapper)
         self.bandAEncodeCbx.setObjectName(u"bandAEncodeCbx")
+        self.bandAEncodeCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_7.addWidget(self.bandAEncodeCbx)
 
@@ -409,6 +412,7 @@ class Ui_MainWindow(object):
 
         self.bandADecodeCbx = QComboBox(self.bandADecodeWrapper)
         self.bandADecodeCbx.setObjectName(u"bandADecodeCbx")
+        self.bandADecodeCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_22.addWidget(self.bandADecodeCbx)
 
@@ -596,6 +600,7 @@ class Ui_MainWindow(object):
 
         self.bandBToneCbx = QComboBox(self.widget_30)
         self.bandBToneCbx.setObjectName(u"bandBToneCbx")
+        self.bandBToneCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_9.addWidget(self.bandBToneCbx)
 
@@ -615,6 +620,7 @@ class Ui_MainWindow(object):
 
         self.bandBCrossCbx = QComboBox(self.bandBCrossWrapper)
         self.bandBCrossCbx.setObjectName(u"bandBCrossCbx")
+        self.bandBCrossCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_23.addWidget(self.bandBCrossCbx)
 
@@ -634,6 +640,7 @@ class Ui_MainWindow(object):
 
         self.bandBEncodeCbx = QComboBox(self.bandBEncodeWrapper)
         self.bandBEncodeCbx.setObjectName(u"bandBEncodeCbx")
+        self.bandBEncodeCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_10.addWidget(self.bandBEncodeCbx)
 
@@ -653,6 +660,7 @@ class Ui_MainWindow(object):
 
         self.bandBDecodeCbx = QComboBox(self.bandBDecodeWrapper)
         self.bandBDecodeCbx.setObjectName(u"bandBDecodeCbx")
+        self.bandBDecodeCbx.setMinimumSize(QSize(60, 0))
 
         self.verticalLayout_24.addWidget(self.bandBDecodeCbx)
 

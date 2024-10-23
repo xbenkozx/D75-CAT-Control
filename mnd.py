@@ -56,12 +56,14 @@ def dumpMemory():
         if data.startswith(b'W'):
             decodeMem(data[5:])
             waitCommand(d75, b'\x06')
+            print("=", end='', flush=True)
     waitCommand(d75, b'E')
+    print('')
 
-    mem_arr = mem_arr[:-8]
+    mems = mem_arr[:-8]
 
     with open(json_file_name, 'w') as f:
-        f.write(json.dumps(mem_arr))
+        f.write(json.dumps(mems))
 
 
 
@@ -72,6 +74,7 @@ if __name__ == "__main__":
                     description='Dump your D75 Memory Names to JSON',
                     epilog='Created by K7DMG')
     parser.add_argument('-p', '--port')
+    # parser.add_argument('-p', '--port', )
     args = parser.parse_args()
 
     port = args.port

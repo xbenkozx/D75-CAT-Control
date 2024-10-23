@@ -551,7 +551,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandAToneCbx"/>
+                       <widget class="QComboBox" name="bandAToneCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -582,7 +589,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandACrossCbx"/>
+                       <widget class="QComboBox" name="bandACrossCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -613,7 +627,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandAEncodeCbx"/>
+                       <widget class="QComboBox" name="bandAEncodeCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -644,7 +665,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandADecodeCbx"/>
+                       <widget class="QComboBox" name="bandADecodeCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -1000,7 +1028,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandBToneCbx"/>
+                       <widget class="QComboBox" name="bandBToneCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -1031,7 +1066,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandBCrossCbx"/>
+                       <widget class="QComboBox" name="bandBCrossCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -1062,7 +1104,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandBEncodeCbx"/>
+                       <widget class="QComboBox" name="bandBEncodeCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -1093,7 +1142,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="bandBDecodeCbx"/>
+                       <widget class="QComboBox" name="bandBDecodeCbx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>

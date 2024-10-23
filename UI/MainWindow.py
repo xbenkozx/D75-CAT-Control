@@ -65,6 +65,8 @@ class MainWindow(QMainWindow):
     band_a_cross_type = -1
     band_b_tone_type = -1
     band_b_cross_type = -1
+    band_a_current_channel_frequency_info:ChannelFrequency = None
+    band_b_current_channel_frequency_info:ChannelFrequency = None
 
     mem_channel_a_input_timer: QTimer = None
     mem_channel_a_input_lock = False
@@ -201,7 +203,7 @@ class MainWindow(QMainWindow):
         self.ui.bandAMonitorBtn.released.connect(self.setClosedSquelchA)
         self.ui.bandBMonitorBtn.released.connect(self.setClosedSquelchB)
 
-        tone_types = ['Off', 'Tone', 'CTCSS', 'DCS', 'D/O']
+        tone_types = ['Off', 'Tone', 'CTCSS', 'DCS', 'Cross']
         self.ui.bandAToneCbx.addItems(tone_types)
         self.ui.bandBToneCbx.addItems(tone_types)
 
@@ -246,6 +248,17 @@ class MainWindow(QMainWindow):
         self.mem_channel_b_input_timer.setSingleShot(True)
         self.mem_channel_b_input_timer.setInterval(100)
         self.mem_channel_b_input_timer.timeout.connect(self.unlockMemChannelB)
+
+
+        self.ui.bandAToneCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandACrossCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandAEncodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandADecodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+
+        self.ui.bandBToneCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBCrossCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBEncodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBDecodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
 
         self.mouseEventFilter = MouseClickEventFilter()
         self.mouseEventFilter.ui = self.ui
@@ -391,7 +404,6 @@ class MainWindow(QMainWindow):
         self.ui.bandBMemoryModeCbx.setEnabled(True)
         self.ui.bandBModeCbx.setEnabled(True)
         self.ui.bandBFreqText.setEnabled(True)
-
     def disableUI(self):
         self.ui.bandControlCbx.setEnabled(False)
         self.ui.bandCbx.setEnabled(False)
@@ -546,10 +558,10 @@ class MainWindow(QMainWindow):
 
             if mode_idx == 0:
                 self.ui.bandAFreqText.setEnabled(True)
-                self.ui.bandAModeCbx.setEnabled(True)
+                self.ui.bandAChannelCbx.setEnabled(False)
             else:
                 self.ui.bandAFreqText.setEnabled(False)
-                self.ui.bandAModeCbx.setEnabled(False)
+                self.ui.bandAChannelCbx.setEnabled(True)
 
             # if mode_idx == 1:
             #     self.ui.bandAChannelLbl.setVisible(True)
@@ -562,10 +574,10 @@ class MainWindow(QMainWindow):
 
             if mode_idx == 0:
                 self.ui.bandBFreqText.setEnabled(True)
-                self.ui.bandBModeCbx.setEnabled(True)
+                self.ui.bandBChannelCbx.setEnabled(False)
             else:
                 self.ui.bandBFreqText.setEnabled(False)
-                self.ui.bandBModeCbx.setEnabled(False)
+                self.ui.bandBChannelCbx.setEnabled(True)
 
             # if mode_idx == 1:
             #     self.ui.bandBChannelLbl.setVisible(True)
@@ -703,12 +715,16 @@ class MainWindow(QMainWindow):
             self.ui.bandBFreqText.setText(freq)
             self.ui.bandBFreqText.blockSignals(False)
 
-    def bandTCodeUpdate(self, encode_widget: QComboBox, decode_widget: QComboBox, cross_widget: QComboBox, info):
-        self.ui.bandAEncodeCbx.blockSignals(True)
+    def bandTCodeUpdate(self, encode_cbx: QComboBox, decode_cbx: QComboBox, cross_cbx: QComboBox, info: ChannelFrequency):
+        
         if (info.band == 0 and (self.band_a_tone_type != info.getToneType() or self.band_a_cross_type != info.cross_encode)) or (info.band == 1 and (self.band_b_tone_type != info.getToneType() or self.band_b_cross_type != info.cross_encode)):
             
-            encode_widget.clear()
-            decode_widget.clear()
+            encode_cbx.blockSignals(True)
+            decode_cbx.blockSignals(True)
+            cross_cbx.blockSignals(True)
+
+            encode_cbx.clear()
+            decode_cbx.clear()
 
             encode_items = []
             decode_items = []
@@ -730,8 +746,8 @@ class MainWindow(QMainWindow):
                     encode_items = self.ctcss_tones
                     decode_items = self.ctcss_tones
 
-            encode_widget.addItems(encode_items)
-            decode_widget.addItems(decode_items)
+            encode_cbx.addItems(encode_items)
+            decode_cbx.addItems(decode_items)
 
             if info.band == 0:
                 self.band_a_cross_type = info.cross_encode
@@ -740,32 +756,77 @@ class MainWindow(QMainWindow):
                 self.band_b_cross_type = info.cross_encode
                 self.band_b_tone_type = info.getToneType()
 
-        if info.getToneType() == 1:
-            encode_widget.setCurrentIndex(info.tone_freq)
-        elif info.getToneType() == 2:
-            encode_widget.setCurrentIndex(info.ctcss_freq)
-        elif info.getToneType() == 3:
-            encode_widget.setCurrentIndex(info.dcs_freq)
-        elif info.getToneType() == 4:
-            cross_widget.setCurrentIndex(info.cross_encode)
+            if info.getToneType() == 1:
+                encode_cbx.setCurrentIndex(info.tone_freq)
+            elif info.getToneType() == 2:
+                encode_cbx.setCurrentIndex(info.ctcss_freq)
+            elif info.getToneType() == 3:
+                encode_cbx.setCurrentIndex(info.dcs_freq)
+            elif info.getToneType() == 4:
+                if info.cross_encode == 0:
+                    encode_cbx.setCurrentIndex(info.dcs_freq)
+                    decode_cbx.setCurrentIndex(0)
+                elif info.cross_encode == 1:
+                    encode_cbx.setCurrentIndex(info.tone_freq)
+                    decode_cbx.setCurrentIndex(info.dcs_freq)
+                elif info.cross_encode == 2:
+                    encode_cbx.setCurrentIndex(info.dcs_freq)
+                    decode_cbx.setCurrentIndex(info.ctcss_freq)
+                elif info.cross_encode == 3:
+                    encode_cbx.setCurrentIndex(info.tone_freq)
+                    decode_cbx.setCurrentIndex(info.ctcss_freq)
 
-            if info.cross_encode == 0:
-                encode_widget.setCurrentIndex(info.dcs_freq)
-                decode_widget.setCurrentIndex(0)
-            elif info.cross_encode == 1:
-                encode_widget.setCurrentIndex(info.tone_freq)
-                decode_widget.setCurrentIndex(info.dcs_freq)
-            elif info.cross_encode == 2:
-                encode_widget.setCurrentIndex(info.dcs_freq)
-                decode_widget.setCurrentIndex(info.ctcss_freq)
-            elif info.cross_encode == 3:
-                encode_widget.setCurrentIndex(info.tone_freq)
-                decode_widget.setCurrentIndex(info.ctcss_freq)
+            cross_cbx.setCurrentIndex(info.cross_encode)
 
-        encode_widget.blockSignals(False)
+            encode_cbx.blockSignals(False)
+            decode_cbx.blockSignals(False)
+            cross_cbx.blockSignals(False)
+    def bandTCodeUpdateUI(self, tone_cbx: QComboBox, encode_cbx: QComboBox, decode_cbx: QComboBox, cross_cbx: QComboBox, info: ChannelFrequency):
+        tone_type = tone_cbx.currentIndex()
+        info.setToneType(tone_type)
         
+        self.bandTCodeUpdate(encode_cbx, decode_cbx, cross_cbx, info)
+        
+        tone_type = info.getToneType()
+        if tone_type == 4:
+            info.cross_encode = cross_cbx.currentIndex()
+
+        self.bandTCodeUpdate(encode_cbx, decode_cbx, cross_cbx, info)
+
+        if tone_type == 1:
+            info.tone_freq = encode_cbx.currentIndex()
+        elif tone_type == 2:
+            info.ctcss_freq = encode_cbx.currentIndex()
+        elif tone_type == 3:
+            info.dcs_freq = encode_cbx.currentIndex()
+        elif tone_type == 4:
+            if info.cross_encode == 0:
+                info.dcs_freq = encode_cbx.currentIndex()
+            elif info.cross_encode == 1:
+                info.tone_freq = encode_cbx.currentIndex()
+                info.dcs_freq = decode_cbx.currentIndex()
+            elif info.cross_encode == 2:
+                info.dcs_freq = encode_cbx.currentIndex()
+                info.ctcss_freq = decode_cbx.currentIndex()
+            elif info.cross_encode == 3:
+                info.tone_freq = encode_cbx.currentIndex()
+                info.ctcss_freq = decode_cbx.currentIndex()
+
+    def updateFrequencyInfoUIA(self):
+        if self.band_a_current_channel_frequency_info != None:
+            info = self.band_a_current_channel_frequency_info
+            self.bandTCodeUpdateUI(self.ui.bandAToneCbx, self.ui.bandAEncodeCbx, self.ui.bandADecodeCbx, self.ui.bandACrossCbx, info)
+            self.updateFrequencyInfo(info)
+            self.setFrequencyInfo(info)
+    def updateFrequencyInfoUIB(self):
+        if self.band_b_current_channel_frequency_info != None:
+            info = self.band_b_current_channel_frequency_info
+            self.bandTCodeUpdateUI(self.ui.bandBToneCbx, self.ui.bandBEncodeCbx, self.ui.bandBDecodeCbx, self.ui.bandBCrossCbx, info)
+            self.updateFrequencyInfo(info)
+            self.setFrequencyInfo(info)
     def updateFrequencyInfo(self, info: ChannelFrequency):
         if info.band == 0:
+            self.band_a_current_channel_frequency_info = info
             self.ui.bandAFreqText.blockSignals(True)
             self.ui.bandAFreqText.setText(info.frequency)
             self.ui.bandAFreqText.blockSignals(False)
@@ -791,6 +852,7 @@ class MainWindow(QMainWindow):
             self.bandTCodeUpdate(self.ui.bandAEncodeCbx, self.ui.bandADecodeCbx, self.ui.bandACrossCbx, info)
 
         else:
+            self.band_b_current_channel_frequency_info = info
             self.ui.bandBFreqText.blockSignals(True)
             self.ui.bandBFreqText.setText(info.frequency)
             self.ui.bandBFreqText.blockSignals(False)
@@ -814,7 +876,15 @@ class MainWindow(QMainWindow):
                 self.ui.bandBDecodeWrapper.setVisible(False)
 
         self.bandTCodeUpdate(self.ui.bandBEncodeCbx, self.ui.bandBDecodeCbx, self.ui.bandBCrossCbx, info)
-            
+    def setFrequencyInfoA(self):
+        info = ChannelFrequency()
+        self.setFrequencyInfo(0, info)
+    def setFrequencyInfoB(self):
+        info = ChannelFrequency()
+        self.setFrequencyInfo(1, info)
+    def setFrequencyInfo(self, info):
+        self.device.setBandFrequencyInfo(info)
+
 class AboutDialog(QDialog):
 
     def __init__(self, parent: MainWindow=None):

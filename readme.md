@@ -24,7 +24,6 @@ Some additional settings can be set in the config.cfg file. <i>port</i> is autos
 As this program is in beta stage of development, there is always room for improvement.
 
 Some things that will be coming in future updates.
-* Ability to change Tone settings from software
 * Read GPS, APRS, and KISS data
 * Open TCP/IP ports for other software to access CAT control, GPS data, and APRS data.
 

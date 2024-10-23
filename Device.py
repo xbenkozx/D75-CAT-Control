@@ -26,6 +26,7 @@ Dependencies: PySide6==6.7.1, PySide6_Addons==6.7.1, PySide6_Essentials==6.7.1
 from PySide6.QtCore import Signal, QObject, QIODevice, QTimer, QCoreApplication
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 
+# ---------- CATCommand Class ---------- #
 class CATCommand():
     SerialNumber    = "AE"
     AFGain          = "AG"
@@ -55,7 +56,9 @@ class CATCommand():
     TX              = "TX"
     BtnUp           = "UP"
     MemoryMode      = "VM"
+# ---------- CATCommand Class ---------- #
 
+# ---------- ChannelFrequency Class ---------- #
 class ChannelFrequency():
     band                = 0
     frequency           = ""
@@ -80,6 +83,7 @@ class ChannelFrequency():
     dstar_sq_code       = ""
 
     def __init__(self, data):
+        print(data)
         self.band               = int(data[0])
         self.frequency          = str(int(data[1][:4])) + '.' + data[1][4:7]
         self.offset             = str(int(data[2][:4])) + '.' + data[2][4:7]
@@ -97,7 +101,7 @@ class ChannelFrequency():
         self.tone_freq          = int(data[14])
         self.ctcss_freq         = int(data[15])
         self.dcs_freq           = int(data[16])
-        self.cross_encode       = int(data[17])
+        self.cross_encode       = 0 if data[17] == 'F' else int(data[17])
         self.urcall             = data[18]
         self.dstar_sq_type      = data[19]
         self.dstar_sq_code      = data[20]
@@ -115,6 +119,60 @@ class ChannelFrequency():
             return 4
 
         return 0
+    
+    def setToneType(self, type: int):
+        if type == 0:
+            self.tone_status = False
+            self.ctcss_status = False
+            self.dcs_status = False
+            self.ctcss_dcs_status = False
+        elif type == 1:
+            self.tone_status = True
+            self.ctcss_status = False
+            self.dcs_status = False
+            self.ctcss_dcs_status = False
+        elif type == 2:
+            self.tone_status = False
+            self.ctcss_status = True
+            self.dcs_status = True
+            self.ctcss_dcs_status = False
+        elif type == 3:
+            self.tone_status = False
+            self.ctcss_status = False
+            self.dcs_status = True
+            self.ctcss_dcs_status = False
+        elif type == 4:
+            self.tone_status = False
+            self.ctcss_status = False
+            self.dcs_status = False
+            self.ctcss_dcs_status = True
+
+
+    def toRadio(self):
+        data                    = [''] * 21
+        data[0]                 = str(self.band)
+        data[1]                 = self.frequency.split('.')[0].rjust(4, '0') + self.frequency.split('.')[1].ljust(6, '0')
+        data[2]                 = self.offset.split('.')[0].rjust(4, '0') + self.offset.split('.')[1].ljust(6, '0')
+        data[3]                 = self.step         
+        data[4]                 = self.tx_step
+        data[5]                 = self.mode
+        data[6]                 = self.fine_mode
+        data[7]                 = self.fine_step_size
+        data[8]                 = '1' if self.tone_status else '0'
+        data[9]                 = '1' if self.ctcss_status else '0'
+        data[10]                = '1' if self.dcs_status else '0'
+        data[11]                = '1' if self.ctcss_dcs_status else '0'
+        data[12]                = self.reversed
+        data[13]                = self.shift_direction
+        data[14]                = str(self.tone_freq).rjust(2, '0')
+        data[15]                = str(self.ctcss_freq).rjust(2, '0')
+        data[16]                = str(self.dcs_freq).rjust(3, '0')
+        data[17]                = str(self.cross_encode)
+        data[18]                = self.urcall         
+        data[19]                = self.dstar_sq_type
+        data[20]                = self.dstar_sq_code
+
+        return ','.join(data)
 
     def toString(self):
         s = "Band: " + str(self.band) + '\n'
@@ -140,8 +198,9 @@ class ChannelFrequency():
         s+= "D-Star Sq Code: " + self.dstar_sq_code + '\n'
 
         return s
+# ---------- ChannelFrequency Class ---------- #
 
-
+# ---------- Device Class ---------- #
 class Device(QObject):
 
     DISCONNECTED        = 1
@@ -149,7 +208,7 @@ class Device(QObject):
     CONNECTED           = 3
     FORCE_DISCONNECTED  = 4
 
-    ch_refresh_interval     = 5000
+    ch_refresh_interval     = 1000
     verbose                 = False
     timeout_timer: QTimer   = None
     refresh_timer: QTimer   = None
@@ -291,6 +350,8 @@ class Device(QObject):
 
         data = self.serial_conn.readAll().data().strip()
 
+        print("D:", data)
+
         if(data == b'?'):
             if len(self.command_buffer) > 0: 
                 print("Invalid Command: " + str(self.command_buffer[0]))
@@ -335,8 +396,9 @@ class Device(QObject):
         elif command == CATCommand.BandControl:
             self.update_band_control.emit(int(command_data[0]))
             self.band_idx = int(command_data[0])
-            if self.memory_mode == 1:
-                self.getBandChannel(self.band_idx)
+            self.getBandFrequencyInfo(self.band_idx)
+            # if self.memory_mode == 1:
+            self.getBandChannel(self.band_idx)
             
         elif command == CATCommand.ModelID:
             self.update_model_id.emit(command_data[0])
@@ -358,7 +420,7 @@ class Device(QObject):
             self.update_band_freq_info.emit(ChannelFrequency(command_data))
 
         elif command == CATCommand.MemoryMode:
-            self.memory_mode = int(command_data[1]) == 1
+            self.memory_mode = int(command_data[1])
             self.update_memory_mode.emit(int(command_data[0]), int(command_data[1]))
             if self.memory_mode == 1:
                 self.getBandChannel(self.band_idx)
@@ -490,6 +552,8 @@ class Device(QObject):
     
     def getBandFrequencyInfo(self, band_idx):
         self.write(CATCommand.FrequencyInfo, str(band_idx))
+    def setBandFrequencyInfo(self, info: ChannelFrequency):
+        self.write(CATCommand.FrequencyInfo, info.toRadio())
     def refreshBandFrequencyInfo(self):
         self.getBandFrequencyInfo(self.band_idx)
     
@@ -566,3 +630,4 @@ class Device(QObject):
         else:
             data = CATCommand.RX
         self.write(data)
+# ---------- Device Class ---------- #
