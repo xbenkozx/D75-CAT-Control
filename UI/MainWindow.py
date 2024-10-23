@@ -558,15 +558,15 @@ class MainWindow(QMainWindow):
 
             if mode_idx == 0:
                 self.ui.bandAFreqText.setEnabled(True)
-                self.ui.bandAChannelCbx.setEnabled(False)
+                # self.ui.bandAChannelCbx.setEnabled(False)
             else:
                 self.ui.bandAFreqText.setEnabled(False)
-                self.ui.bandAChannelCbx.setEnabled(True)
+                # self.ui.bandAChannelCbx.setEnabled(True)
 
-            # if mode_idx == 1:
-            #     self.ui.bandAChannelLbl.setVisible(True)
-            # else:
-            #     self.ui.bandAChannelLbl.setVisible(False)
+            if mode_idx == 1:
+                self.ui.bandAChannelCbx.setEnabled(True)
+            else:
+                self.ui.bandAChannelCbx.setEnabled(False)
         else:
             self.ui.bandBMemoryModeCbx.blockSignals(True)
             self.ui.bandBMemoryModeCbx.setCurrentIndex(mode_idx)
@@ -574,15 +574,15 @@ class MainWindow(QMainWindow):
 
             if mode_idx == 0:
                 self.ui.bandBFreqText.setEnabled(True)
-                self.ui.bandBChannelCbx.setEnabled(False)
+                # self.ui.bandBChannelCbx.setEnabled(False)
             else:
                 self.ui.bandBFreqText.setEnabled(False)
-                self.ui.bandBChannelCbx.setEnabled(True)
+                # self.ui.bandBChannelCbx.setEnabled(True)
 
-            # if mode_idx == 1:
-            #     self.ui.bandBChannelLbl.setVisible(True)
-            # else:
-            #     self.ui.bandBChannelLbl.setVisible(False)
+            if mode_idx == 1:
+                self.ui.bandBChannelCbx.setEnabled(True)
+            else:
+                self.ui.bandBChannelCbx.setEnabled(False)
 
     def setBandModeA(self):
         self.device.setBandMode(self.ui.bandAModeCbx.currentIndex(), 0)

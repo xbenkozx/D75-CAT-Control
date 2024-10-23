@@ -101,10 +101,15 @@ class ChannelFrequency():
         self.tone_freq          = int(data[14])
         self.ctcss_freq         = int(data[15])
         self.dcs_freq           = int(data[16])
-        self.cross_encode       = 0 if data[17] == 'F' else int(data[17])
+        try:
+            self.cross_encode   = int(data[17])
+        except:
+            self.cross_encode   = 0
+
         self.urcall             = data[18]
-        self.dstar_sq_type      = data[19]
-        self.dstar_sq_code      = data[20]
+        if data[17] != 'D':
+            self.dstar_sq_type      = data[19]
+            self.dstar_sq_code      = data[20]
 
     def getToneType(self) -> int:
         if not (self.tone_status or self.ctcss_status or self.dcs_status or self.ctcss_dcs_status):
@@ -352,11 +357,11 @@ class Device(QObject):
 
         if(data == b'?'):
             if len(self.command_buffer) > 0: 
-                print("Invalid Command: " + str(self.command_buffer[0]))
+                if self.verbose: print("Invalid Command: " + str(self.command_buffer[0]))
                 self.command_buffer.pop(0)
         elif(data == b'N'):
             if len(self.command_buffer) > 0: 
-                print("Command rejected: " + str(self.command_buffer[0]))
+                if self.verbose: print("Command rejected: " + str(self.command_buffer[0]))
                 self.command_buffer.pop(0)
             
         else:
@@ -404,6 +409,8 @@ class Device(QObject):
         elif command == CATCommand.BandMode:
             if self.memory_mode == 1:
                 self.getBandChannel(self.band_idx)
+            else:
+                self.getBandFrequencyInfo(self.band_idx)
             self.update_band_mode.emit(int(command_data[0]), int(command_data[1]))
 
         elif command == CATCommand.Frequency:
