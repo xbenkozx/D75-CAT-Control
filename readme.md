@@ -20,13 +20,13 @@ You will need to dump the memory channel names if there is any addition, removal
 ## Config
 Some additional settings can be set in the config.cfg file. The config file can be located in the D75 CAT Control folder in your HOME directory.
 
-| Section | Variable | Default | Description |
-|-|-|-|-|
-| SERIAL | port | <i>empty</i> | Defines the serial COM port.<br/>Autosaved based on your previous connection. |
-| SERIAL | autoconnect | False | Can be set to <i>True</i> if you wish to attempt a connection to your last COM port on startup. |
-| GPS | alt_format | I | I = Imperial, M = Metric |
-| GPS | spd_format | I | I = Imperial, M = Metric |
-| DEBUG | verbose | False | Set to True if you want all data sent and received to print to console. |
+| Section | Variable    | Default      | Description |
+|---------|-------------|--------------|-------------|
+| SERIAL  | port        | <i>empty</i> | Defines the serial COM port.<br/>Autosaved based on your previous connection. |
+| SERIAL  | autoconnect | False        | Can be set to <i>True</i> if you wish to attempt a<br/>connection to your last COM port on startup. |
+| GPS     | alt_format  | I            | I = Imperial, M = Metric |
+| GPS     | spd_format  | I            | I = Imperial, M = Metric |
+| DEBUG   | verbose     | False        | Set to True if you want all data sent and received<br/>to print to console. |
 |||||
 
 
