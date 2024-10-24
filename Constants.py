@@ -35,6 +35,8 @@ class Constants():
         "731", "732", "734", "743", "754"
     ]
 
+    gps_sentences = ['$GPRMC', '$GPGGA']
+
     def getProgramDir():
         return os.path.join(os.path.expanduser('~'), 'D75 CAT Control')
     

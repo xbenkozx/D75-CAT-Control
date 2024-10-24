@@ -753,6 +753,38 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.widget_12)
 
+        self.label_13 = QLabel(self.centralwidget)
+        self.label_13.setObjectName(u"label_13")
+
+        self.verticalLayout.addWidget(self.label_13)
+
+        self.widget_31 = QWidget(self.centralwidget)
+        self.widget_31.setObjectName(u"widget_31")
+        self.horizontalLayout_16 = QHBoxLayout(self.widget_31)
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.gpsLatLbl = QLabel(self.widget_31)
+        self.gpsLatLbl.setObjectName(u"gpsLatLbl")
+
+        self.horizontalLayout_16.addWidget(self.gpsLatLbl)
+
+        self.gpsLonLbl = QLabel(self.widget_31)
+        self.gpsLonLbl.setObjectName(u"gpsLonLbl")
+
+        self.horizontalLayout_16.addWidget(self.gpsLonLbl)
+
+        self.gpsAltLbl = QLabel(self.widget_31)
+        self.gpsAltLbl.setObjectName(u"gpsAltLbl")
+
+        self.horizontalLayout_16.addWidget(self.gpsAltLbl)
+
+        self.gpsSpeedLbl = QLabel(self.widget_31)
+        self.gpsSpeedLbl.setObjectName(u"gpsSpeedLbl")
+
+        self.horizontalLayout_16.addWidget(self.gpsSpeedLbl)
+
+
+        self.verticalLayout.addWidget(self.widget_31)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -819,5 +851,10 @@ class Ui_MainWindow(object):
         self.bandBMemoryModeCbx.setCurrentText("")
         self.bandBMemoryModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"VFO", None))
         self.bandBModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"FM", None))
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"GPS Data", None))
+        self.gpsLatLbl.setText(QCoreApplication.translate("MainWindow", u"LAT:", None))
+        self.gpsLonLbl.setText(QCoreApplication.translate("MainWindow", u"LON:", None))
+        self.gpsAltLbl.setText(QCoreApplication.translate("MainWindow", u"ALT:", None))
+        self.gpsSpeedLbl.setText(QCoreApplication.translate("MainWindow", u"SPD:", None))
     # retranslateUi
 

@@ -24,13 +24,16 @@ Dependencies: PySide6
 """
 
 import os, logging, configparser, json, sys
-from PySide6.QtCore import QTimer, QObject, QEvent
+from PySide6.QtCore import QTimer, QObject, QEvent, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox, QMainWindow, QComboBox, QLabel, QStatusBar
 from PySide6.QtSerialPort import QSerialPortInfo
+from PySide6.QtNetwork import QTcpSocket, QHostAddress
 from UI.windows.ui_main_window import Ui_MainWindow
 from Device import Device, ChannelFrequency
 from Constants import Constants
+from GPSData import GPSData
+from CATControlServer import CATControlServer
 from UI.windows.ui_com_port_dialog import Ui_ComPortDialog
 from UI.windows.ui_about_dialog import Ui_AboutDialog
 
@@ -63,6 +66,9 @@ class MainWindow(QMainWindow):
     about_dialog = None
     in_tx = False
     port_name = ""
+
+    gps_alt_format = 'I'
+    gps_speed_format = 'I'
     
     band_a_squelch = 0
     band_b_squelch = 0
@@ -80,9 +86,13 @@ class MainWindow(QMainWindow):
 
     mouseEventFilter:MouseClickEventFilter = None
 
+    cat_server: CATControlServer = None
+
     
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        # self.cat_server = CATControlServer(self)
         
         # Setup MainWindow UI
         self.ui = Ui_MainWindow()
@@ -280,6 +290,7 @@ class MainWindow(QMainWindow):
             self.device.update_tnc.connect(self.updateTNC)
             self.device.update_beacon_type.connect(self.updateBeaconType)
             self.device.update_output_power.connect(self.updateOutputPower)
+            self.device.update_gps_data.connect(self.updateGPSData)
             self.device.setRealtimeFB(True)
             self.device.getRealtimeFB()
             self.saveConfig()
@@ -303,6 +314,12 @@ class MainWindow(QMainWindow):
             if config.has_option('SERIAL', 'autoconnect'):
                 self.autoconnect = config['SERIAL']['autoconnect'] == 'True'
 
+            if config.has_option('GPS', 'alt_format'):
+                self.gps_alt_format = config['GPS']['alt_format']
+
+            if config.has_option('GPS', 'spd_format'):
+                self.gps_speed_format = config['GPS']['spd_format']
+
             if config['SERIAL']['port'] != "":
                 self.port_name =  config['SERIAL']['port']
                 self.status_bar_conn_status.setText(f"{self.port_name}: Not Connected")
@@ -314,9 +331,15 @@ class MainWindow(QMainWindow):
             'autoconnect': self.autoconnect
         }
 
+        config['GPS'] = {
+            'alt_format': self.gps_alt_format,
+            'spd_format': self.gps_speed_format
+        }
+
         config['DEBUG'] = {
             'verbose': self.verbose
         }
+
         with open(config_file_path, 'w') as configfile:
             config.write(configfile)
     
@@ -426,6 +449,12 @@ class MainWindow(QMainWindow):
         self.ui.bandBWidget.setStyleSheet("")
 
 
+        self.ui.gpsLatLbl.setText(f"LAT:")
+        self.ui.gpsLonLbl.setText(f"LON:")
+        self.ui.gpsAltLbl.setText(f"ALT:")
+        self.ui.gpsSpeedLbl.setText(f"SPD:")
+
+
     #SLOTS
     def errorOccurred(self, message, title="Error"):
         if self.device != None:
@@ -446,6 +475,17 @@ class MainWindow(QMainWindow):
             self.ui.bandAMeter.setValue(level)
         else:
             self.ui.bandBMeter.setValue(level)
+    def updateGPSData(self, gps_data: GPSData):
+        if gps_data.isValid():
+            self.ui.gpsLatLbl.setText(f"LAT: {gps_data.getLatitude()}")
+            self.ui.gpsLonLbl.setText(f"LON: {gps_data.getLongitude()}")
+            self.ui.gpsAltLbl.setText(f"ALT: {gps_data.getAltitude(self.gps_alt_format)} {'ft' if self.gps_alt_format == 'I' else 'm'}")
+            self.ui.gpsSpeedLbl.setText(f"SPD: {gps_data.getSpeed(self.gps_speed_format)} {'mph' if self.gps_speed_format == 'I' else 'kt'}")
+        else:
+            self.ui.gpsLatLbl.setText(f"LAT:")
+            self.ui.gpsLonLbl.setText(f"LON:")
+            self.ui.gpsAltLbl.setText(f"ALT:")
+            self.ui.gpsSpeedLbl.setText(f"SPD:")
     
     def setDualBand(self):
         if self.device != None: self.device.setDualSingleBand(self.ui.bandControlCbx.currentIndex())
@@ -937,3 +977,4 @@ class ComPortDialog(QDialog):
         self.parent.connectDevice(self.serial_list[self.ui.portCbx.currentIndex()].portName())
         self.hide()
 # ---------- ComPortDialog Class ---------- #
+

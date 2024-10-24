@@ -11,14 +11,26 @@ The KISS interface can be changed via Menu [983].
 Memory channels are defaulted in the CAT control software to just the numbers. If you would like add names to your channels, use the additional <i>mnd.py</i> file with the 
 argument -p [COMPORT]. This will dump your memory channel names to <i>channel_memory.json</i> and will load next time you start the CAT Control software.
 
+The file can be located in the D75 CAT Control folder in your HOME directory.
+
 You will need to dump the memory channel names if there is any addition, removal, or name change of the channel.
 
-The way that the radio reports the current channel over serial, it is not possible to preload both bands current channel. Once you switch bands, it will load the current band into the CAT Control software.
+<i>Note: The way that the radio reports the current channel over serial, it is not possible to preload both bands current channel. Once you switch bands, it will load the current band into the CAT Control software.</i>
 
 ## Config
-Some additional settings can be set in the config.cfg file. <i>port</i> is autosaved based on your previous connection com port. <i>autoconnect</i> can be set to <i>True</i> if you wish to have the CAT Control software attempt a connection to your last com port on startup.
+Some additional settings can be set in the config.cfg file. The config file can be located in the D75 CAT Control folder in your HOME directory.
 
-<i>verbose</i> can be set to <i>True</i> to see the data being sent and received from the radio.
+| Section | Variable | Default | Description |
+|-|-|-|-|
+| SERIAL | port | <i>empty</i> | Defines the serial COM port.<br/>Autosaved based on your previous connection. |
+| SERIAL | autoconnect | False | Can be set to <i>True</i> if you wish to attempt a connection to your last COM port on startup. |
+| GPS | alt_format | I | I = Imperial, M = Metric |
+| GPS | spd_format | I | I = Imperial, M = Metric |
+| DEBUG | verbose | False | Set to True if you want all data sent and received to print to console. |
+|||||
+
+
+
 
 ## Future Development
 As this program is in beta stage of development, there is always room for improvement.

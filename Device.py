@@ -25,6 +25,8 @@ Dependencies: PySide6
 from time import sleep
 from PySide6.QtCore import Signal, QObject, QIODevice, QTimer
 from PySide6.QtSerialPort import QSerialPort
+from Constants import Constants
+from GPSData import GPSData
 
 # ---------- CATCommand Class ---------- #
 class CATCommand():
@@ -256,6 +258,7 @@ class Device(QObject):
     update_output_power     = Signal(int, int)
     update_mem_channel_freq = Signal(int)
     update_band_freq_info   = Signal(ChannelFrequency)
+    update_gps_data         = Signal(GPSData)
     
     command_buffer = []
 
@@ -264,6 +267,8 @@ class Device(QObject):
 
         self.serial_port    = serial_port
         self.status         = Device.DISCONNECTED
+
+        self.gps_data       = GPSData()
 
         self.timeout_timer  = QTimer()
         self.timeout_timer.setSingleShot(True)
@@ -351,6 +356,8 @@ class Device(QObject):
             self.command_buffer = []
     
     serial_buffer = b''
+    gps_data: GPSData = None
+
     def __readyRead(self):
         self.status  = Device.CONNECTED
         self.timeout_timer.stop()
@@ -390,7 +397,12 @@ class Device(QObject):
         if len(self.command_buffer) > 0:
             self.writeData(self.command_buffer[0])
     def parseCommand(self, serial_data):
-        data = serial_data.decode("UTF-8").strip()
+        data: str = serial_data.decode("UTF-8").strip()
+
+        if data.startswith('$'):
+            self.gps_data.parseData(data)
+            self.update_gps_data.emit(self.gps_data)
+            return
 
         exploded_data = data.split()
         command = exploded_data[0]
