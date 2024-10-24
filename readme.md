@@ -1,8 +1,8 @@
+# D74/75 CAT Control Software
+
 <p align="center">
 <img src="./icon.png" />
 </p>
-
-# D74/75 CAT Control Software
 
 This software is for controlling the Kenwood D74/75 via CAT commands from your PC, Mac, or Linux computer.
 
