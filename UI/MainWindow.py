@@ -23,20 +23,21 @@ Contact: k7dmg@protonmail.com
 Dependencies: PySide6
 """
 
-import os, logging, configparser, json
-from time import sleep
+import os, logging, configparser, json, sys
 from PySide6.QtCore import QTimer, QObject, QEvent
-from PySide6.QtWidgets import QApplication, QDialog, QMessageBox, QMainWindow, QComboBox, QVBoxLayout, QLabel, QHBoxLayout, QStatusBar
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QApplication, QDialog, QMessageBox, QMainWindow, QComboBox, QLabel, QStatusBar
 from PySide6.QtSerialPort import QSerialPortInfo
 from UI.windows.ui_main_window import Ui_MainWindow
 from Device import Device, ChannelFrequency
+from Constants import Constants
 from UI.windows.ui_com_port_dialog import Ui_ComPortDialog
 from UI.windows.ui_about_dialog import Ui_AboutDialog
 
 logger = logging.getLogger(__name__)
+config_file_path = os.path.join(Constants.getProgramDir(), 'config.cfg')
 
-config_file_path = './config.cfg'
-
+# ---------- MouseClickEventFilter Class ---------- #
 class MouseClickEventFilter(QObject):
     ui: Ui_MainWindow = None
     def eventFilter(self, obj, event):
@@ -48,7 +49,9 @@ class MouseClickEventFilter(QObject):
                 self.ui.bandCbx.setCurrentIndex(1)
 
         return super(MouseClickEventFilter, self).eventFilter(obj, event)
-    
+# ---------- MouseClickEventFilter Class ---------- #
+
+# ---------- MainWindow Class ---------- #
 class MainWindow(QMainWindow):
     is_dark_mode = False
 
@@ -76,40 +79,7 @@ class MainWindow(QMainWindow):
 
     mouseEventFilter:MouseClickEventFilter = None
 
-    styles = {
-        "default" :
-        { 
-            "bandWidgetActive": "{background-color:lightblue;border-radius: 10px;}",
-            "bandWidgetInactive": "{background-color:silver;border-radius: 10px;}"
-        },
-        "dark_mode":
-        {
-            "bandWidgetActive": "{background-color:#01344f;border-radius: 10px;}",
-            "bandWidgetInactive": "{background-color:#333;border-radius: 10px;}"
-        }
-    }
-
-    ctcss_tones = [
-        "67.0", "69.3", "71.9", "74.4", "77.0", "79.7", "82.5", "85.4", "88.5", 
-        "91.5", "94.8", "97.4", "100.0", "103.5", "107.2", "110.9", "114.8", 
-        "118.8", "123.0", "127.3", "131.8", "136.5", "141.3", "146.2", "151.4", 
-        "156.7", "162.2", "167.9", "173.8", "179.9", "186.2", "192.8", "203.5", 
-        "210.7", "218.1", "225.7", "233.6", "241.8", "250.3"
-    ]
-
-    dcs_tones = [
-        "023", "025", "026", "031", "032", "036", "043", "047", "051", "053", "054", 
-        "065", "071", "072", "073", "074", "114", "115", "116", "122", "125", "131", 
-        "132", "134", "143", "145", "152", "155", "156", "162", "165", "172", "174", 
-        "205", "212", "223", "225", "226", "243", "244", "245", "246", "251", "252", 
-        "255", "261", "263", "265", "266", "271", "274", "306", "311", "315", "325", 
-        "331", "332", "343", "346", "351", "356", "364", "365", "371", "411", "412", 
-        "413", "423", "431", "432", "445", "446", "452", "454", "455", "462", "464", 
-        "465", "466", "503", "506", "516", "523", "526", "532", "546", "565", "606", 
-        "612", "624", "627", "631", "632", "654", "662", "664", "703", "712", "723", 
-        "731", "732", "734", "743", "754"
-    ]
-
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -117,129 +87,133 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.mouseEventFilter = MouseClickEventFilter()
+        self.mouseEventFilter.ui = self.ui
+
+        # Status Bar
         status_bar = QStatusBar()
         self.setStatusBar(status_bar)
-
-        self.ui.radioUpdateChbx.setVisible(False)
-
-        # Add a label to the status bar
+        status_bar_widget_style = "padding: 0px 10px;"
         self.status_bar_conn_status = QLabel("Status: Not Connected")
-        self.status_bar_conn_status.setStyleSheet("padding: 0px 10px;")
         self.status_bar_fw_version = QLabel("FW:")
-        self.status_bar_fw_version.setStyleSheet("padding: 0px 10px;")
         self.status_bar_sn = QLabel("S/N:")
-        self.status_bar_sn.setStyleSheet("padding: 0px 10px;")
         self.status_bar_model_id = QLabel()
-        self.status_bar_model_id.setStyleSheet("padding: 0px 10px;")
-
         self.status_bar_creator = QLabel("Created By K7DMG")
-        self.status_bar_creator.setStyleSheet("padding: 0px 10px;")
-
+        self.status_bar_conn_status.setStyleSheet(status_bar_widget_style)
+        self.status_bar_fw_version.setStyleSheet(status_bar_widget_style)
+        self.status_bar_sn.setStyleSheet(status_bar_widget_style)
+        self.status_bar_model_id.setStyleSheet(status_bar_widget_style)
+        self.status_bar_creator.setStyleSheet(status_bar_widget_style)
         status_bar.addWidget(self.status_bar_conn_status)
         status_bar.addWidget(self.status_bar_fw_version)
         status_bar.addWidget(self.status_bar_sn)
         status_bar.addWidget(self.status_bar_model_id)
         status_bar.addWidget(self.status_bar_creator)
 
-        
-        self.ui.upBtn.clicked.connect(self.upButton)
-        self.ui.dwnBtn.clicked.connect(self.downButton)
-        self.ui.txBtn.clicked.connect(self.setTX)
-        self.ui.volumeSlider.valueChanged.connect(self.setVolume)
+        # Might remove in the future
+        self.ui.radioUpdateChbx.setVisible(False)
         self.ui.radioUpdateChbx.clicked.connect(self.setAutoFeedback)
 
-        
+        # Top Buttons
+        self.ui.comPortBtn.clicked.connect(self.showComPortDialog)
+        self.ui.portConnectBtn.clicked.connect(lambda: self.connectDevice())
+        self.ui.aboutDialogBtn.clicked.connect(self.showAboutDialog)
+
+        # Radio Settings UI
         self.ui.bandControlCbx.addItems(['Dual Band', 'Single Band'])
-        self.ui.bandControlCbx.currentIndexChanged.connect(self.setDualBand)
-        
-        
         self.ui.bandCbx.addItem("Band A")
         self.ui.bandCbx.addItem("Band B")
-        self.ui.bandCbx.currentIndexChanged.connect(self.setBandControl)
-
-        
         self.ui.backlightCbx.addItems(['Manual', 'On', 'Auto', 'Auto (DC-IN)'])
-        self.ui.backlightCbx.currentIndexChanged.connect(self.setBacklight)
-
-        self.ui.btEnabledChbx.stateChanged.connect(self.setBtEnabled)
-        self.ui.gpsEnabledChbx.stateChanged.connect(self.setGPS)
-        self.ui.gpsPcOutChbx.stateChanged.connect(self.setGPS)
-
         self.ui.tncModeCbx.addItems(['Off', 'APRS', 'KISS'])
         self.ui.tncBandCbx.addItems(['Band A', 'Band B'])
-        
-        self.ui.tncModeCbx.currentIndexChanged.connect(self.setTNC)
-        self.ui.tncBandCbx.currentIndexChanged.connect(self.setTNC)
-
         self.ui.beaconCbx.addItems(['Manual', 'PTT', 'Auto', 'SmartBeaconing'])
-        self.ui.beaconCbx.currentIndexChanged.connect(self.setBeaconType)
 
-        self.ui.beaconBtn.clicked.connect(self.toggleBeacon)
-
-        self.ui.bandASquelchCbx.addItems("%s" %i for i in range(0,6))
-        self.ui.bandBSquelchCbx.addItems("%s" %i for i in range(0,6))
-        self.ui.bandASquelchCbx.currentIndexChanged.connect(self.setSquelchA)
-        self.ui.bandBSquelchCbx.currentIndexChanged.connect(self.setSquelchB)
-        
+        #Band UI
         mem_names = [''] * 1000
         if os.path.exists("channel_memory.json"):
             with open("channel_memory.json", 'r') as f:
                 mem_names = json.loads(f.read())
+        tone_types = ['Off', 'Tone', 'CTCSS', 'DCS', 'Cross']
+        power_arr = ["High", "Medium", "Low", "Extra Low"]
+        memory_mode_arr = ["VFO", "Memory", "Call", "DV"]
+        modulation_mode_arr = ["FM", "DV", "AM", "LSB", "USB", "CW", "NFM", "DR", "WFM", "R-CW"]
+        cross_code_types = ['DCS/Off', 'Tone/DCS', 'DCS/CTCSS', 'Tone/CTCSS']
+
         for i in range(999):
             ch_name = str(i).rjust(3,'0')
             if len(mem_names[i]) > 0: ch_name += " - " + mem_names[i]
             self.ui.bandAChannelCbx.addItem(ch_name)
             self.ui.bandBChannelCbx.addItem(ch_name)
-        self.ui.bandAChannelCbx.currentIndexChanged.connect(self.setMemChannelA)
-        self.ui.bandBChannelCbx.currentIndexChanged.connect(self.setMemChannelB)
-
-        # self.ui.bandAChannelCbx.currentTextChanged.connect(self.setMemChannelA)
-        # self.ui.bandBChannelCbx.currentTextChanged.connect(self.setMemChannelB)
-
-        self.ui.bandAFreqText.editingFinished.connect(self.setFrequencyA)
-        self.ui.bandBFreqText.editingFinished.connect(self.setFrequencyB)
-
-        self.ui.bandAMonitorBtn.pressed.connect(self.setOpenSquelchA)
-        self.ui.bandBMonitorBtn.pressed.connect(self.setOpenSquelchB)
-        self.ui.bandAMonitorBtn.released.connect(self.setClosedSquelchA)
-        self.ui.bandBMonitorBtn.released.connect(self.setClosedSquelchB)
-
-        tone_types = ['Off', 'Tone', 'CTCSS', 'DCS', 'Cross']
+            
+        #Band A UI
+        self.ui.bandASquelchCbx.addItems("%s" %i for i in range(0,6))
         self.ui.bandAToneCbx.addItems(tone_types)
-        self.ui.bandBToneCbx.addItems(tone_types)
-
-        power_arr = ["High", "Medium", "Low", "Extra Low"]
-        for item in power_arr:
-            self.ui.bandAPwrCbx.addItem(item)
-            self.ui.bandBPwrCbx.addItem(item)
-        self.ui.bandAPwrCbx.currentIndexChanged.connect(self.setOutputPowerA)
-        self.ui.bandBPwrCbx.currentIndexChanged.connect(self.setOutputPowerB)
-
-        memory_mode_arr = ["VFO", "Memory", "Call", "DV"]
-        for item in memory_mode_arr:
-            self.ui.bandAMemoryModeCbx.addItem(item)
-            self.ui.bandBMemoryModeCbx.addItem(item)
-        self.ui.bandAMemoryModeCbx.currentIndexChanged.connect(self.setMemoryModeA)
-        self.ui.bandBMemoryModeCbx.currentIndexChanged.connect(self.setMemoryModeB)
-
-        modulation_mode_arr = ["FM", "DV", "AM", "LSB", "USB", "CW", "NFM", "DR", "WFM", "R-CW"]
-        for item in modulation_mode_arr:
-            self.ui.bandAModeCbx.addItem(item)
-            self.ui.bandBModeCbx.addItem(item)
-        self.ui.bandAModeCbx.currentIndexChanged.connect(self.setBandModeA)
-        self.ui.bandBModeCbx.currentIndexChanged.connect(self.setBandModeB)
-
-        cross_code_types = ['DCS/Off', 'Tone/DCS', 'DCS/CTCSS', 'Tone/CTCSS']
+        self.ui.bandAPwrCbx.addItems(power_arr)
+        self.ui.bandAMemoryModeCbx.addItems(memory_mode_arr)
+        self.ui.bandAModeCbx.addItems(modulation_mode_arr)
         self.ui.bandACrossCbx.addItems(cross_code_types)
+
+        #Band B UI
+        self.ui.bandBSquelchCbx.addItems("%s" %i for i in range(0,6))
+        self.ui.bandBToneCbx.addItems(tone_types)
+        self.ui.bandBPwrCbx.addItems(power_arr)
+        self.ui.bandBMemoryModeCbx.addItems(memory_mode_arr)
+        self.ui.bandBModeCbx.addItems(modulation_mode_arr)
         self.ui.bandBCrossCbx.addItems(cross_code_types)
 
+        # Radio Settings UI Signals
+        self.ui.bandControlCbx.currentIndexChanged.connect(self.setDualBand)
+        self.ui.bandCbx.currentIndexChanged.connect(self.setBandControl)
+        self.ui.txBtn.clicked.connect(self.setTX)
+        self.ui.upBtn.clicked.connect(self.upButton)
+        self.ui.dwnBtn.clicked.connect(self.downButton)
+        self.ui.volumeSlider.valueChanged.connect(self.setVolume)
+        self.ui.backlightCbx.currentIndexChanged.connect(self.setBacklight)
+        self.ui.btEnabledChbx.stateChanged.connect(self.setBtEnabled)
+        self.ui.gpsEnabledChbx.stateChanged.connect(self.setGPS)
+        self.ui.gpsPcOutChbx.stateChanged.connect(self.setGPS)
+        self.ui.tncModeCbx.currentIndexChanged.connect(self.setTNC)
+        self.ui.tncBandCbx.currentIndexChanged.connect(self.setTNC)
+        self.ui.beaconCbx.currentIndexChanged.connect(self.setBeaconType)
+        self.ui.beaconBtn.clicked.connect(self.toggleBeacon)
+
+        # Band A UI Signals
+        self.ui.bandASquelchCbx.currentIndexChanged.connect(self.setSquelchA)
+        self.ui.bandAChannelCbx.currentIndexChanged.connect(self.setMemChannelA)
+        self.ui.bandAFreqText.editingFinished.connect(self.setFrequencyA)
+        self.ui.bandAMonitorBtn.pressed.connect(self.setOpenSquelchA)
+        self.ui.bandAMonitorBtn.released.connect(self.setClosedSquelchA)
+        self.ui.bandAPwrCbx.currentIndexChanged.connect(self.setOutputPowerA)
+        self.ui.bandAMemoryModeCbx.currentIndexChanged.connect(self.setMemoryModeA)
+        self.ui.bandAModeCbx.currentIndexChanged.connect(self.setBandModeA)
+        self.ui.bandAToneCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandACrossCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandAEncodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandADecodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
+        self.ui.bandAWidget.installEventFilter(self.mouseEventFilter)
+
+        #Band B UI Signals
+        self.ui.bandBSquelchCbx.currentIndexChanged.connect(self.setSquelchB)
+        self.ui.bandBChannelCbx.currentIndexChanged.connect(self.setMemChannelB)
+        self.ui.bandBFreqText.editingFinished.connect(self.setFrequencyB)
+        self.ui.bandBMonitorBtn.pressed.connect(self.setOpenSquelchB)
+        self.ui.bandBMonitorBtn.released.connect(self.setClosedSquelchB)
+        self.ui.bandBPwrCbx.currentIndexChanged.connect(self.setOutputPowerB)
+        self.ui.bandBMemoryModeCbx.currentIndexChanged.connect(self.setMemoryModeB)
+        self.ui.bandBModeCbx.currentIndexChanged.connect(self.setBandModeB)
+        self.ui.bandBToneCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBCrossCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBEncodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBDecodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
+        self.ui.bandBWidget.installEventFilter(self.mouseEventFilter)
+        
+        
+        # Dialogs
         self.com_port_dialog = ComPortDialog(self)
         self.about_dialog = AboutDialog()
 
-        self.ui.comPortBtn.clicked.connect(self.showComPortDialog)
-        self.ui.portConnectBtn.clicked.connect(lambda: self.connectDevice())
-        self.ui.aboutDialogBtn.clicked.connect(self.showAboutDialog)
-
+        
+        # Setup input timeout timers
         self.mem_channel_a_input_timer = QTimer()
         self.mem_channel_a_input_timer.setSingleShot(True)
         self.mem_channel_a_input_timer.setInterval(100)
@@ -250,24 +224,7 @@ class MainWindow(QMainWindow):
         self.mem_channel_b_input_timer.setInterval(100)
         self.mem_channel_b_input_timer.timeout.connect(self.unlockMemChannelB)
 
-
-        self.ui.bandAToneCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
-        self.ui.bandACrossCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
-        self.ui.bandAEncodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
-        self.ui.bandADecodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIA)
-
-        self.ui.bandBToneCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
-        self.ui.bandBCrossCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
-        self.ui.bandBEncodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
-        self.ui.bandBDecodeCbx.currentIndexChanged.connect(self.updateFrequencyInfoUIB)
-
-        self.mouseEventFilter = MouseClickEventFilter()
-        self.mouseEventFilter.ui = self.ui
-        self.ui.bandAWidget.installEventFilter(self.mouseEventFilter)
-        self.ui.bandBWidget.installEventFilter(self.mouseEventFilter)
-
         self.disableUI()
-
         self.loadConfig()
     def closeDevice(self):
         self.device.command_buffer = []
@@ -349,8 +306,6 @@ class MainWindow(QMainWindow):
             if config['SERIAL']['port'] != "":
                 self.port_name =  config['SERIAL']['port']
                 self.status_bar_conn_status.setText(f"{self.port_name}: Not Connected")
-                
-
     def saveConfig(self):
         config = configparser.ConfigParser()
 
@@ -527,11 +482,11 @@ class MainWindow(QMainWindow):
         self.ui.bandCbx.blockSignals(False)
 
         if idx == 0:
-            self.ui.bandAWidget.setStyleSheet(f"#bandAWidget {self.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetActive']}")
-            self.ui.bandBWidget.setStyleSheet(f"#bandBWidget {self.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetInactive']}")
+            self.ui.bandAWidget.setStyleSheet(f"#bandAWidget {Constants.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetActive']}")
+            self.ui.bandBWidget.setStyleSheet(f"#bandBWidget {Constants.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetInactive']}")
         else:
-            self.ui.bandAWidget.setStyleSheet(f"#bandAWidget {self.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetInactive']}")
-            self.ui.bandBWidget.setStyleSheet(f"#bandBWidget {self.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetActive']}")
+            self.ui.bandAWidget.setStyleSheet(f"#bandAWidget {Constants.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetInactive']}")
+            self.ui.bandBWidget.setStyleSheet(f"#bandBWidget {Constants.styles['dark_mode' if self.is_dark_mode else 'default']['bandWidgetActive']}")
 
     def setAutoFeedback(self):
         if self.device != None: self.device.setRealtimeFB(self.ui.radioUpdateChbx.isChecked())
@@ -750,22 +705,22 @@ class MainWindow(QMainWindow):
             encode_items = []
             decode_items = []
             if info.getToneType() == 1 or info.getToneType() == 2:
-                encode_items = self.ctcss_tones
+                encode_items = Constants.ctcss_tones
             elif info.getToneType() == 3:
-                encode_items = self.dcs_tones
+                encode_items = Constants.dcs_tones
             elif info.getToneType() == 4:
                 if info.cross_encode == 0:
-                    encode_items = self.dcs_tones
+                    encode_items = Constants.dcs_tones
                     decode_items = ['Off']
                 elif info.cross_encode == 1:
-                    encode_items = self.ctcss_tones
-                    decode_items = self.dcs_tones
+                    encode_items = Constants.ctcss_tones
+                    decode_items = Constants.dcs_tones
                 elif info.cross_encode == 2:
-                    encode_items = self.dcs_tones
-                    decode_items = self.ctcss_tones
+                    encode_items = Constants.dcs_tones
+                    decode_items = Constants.ctcss_tones
                 elif info.cross_encode == 3:
-                    encode_items = self.ctcss_tones
-                    decode_items = self.ctcss_tones
+                    encode_items = Constants.ctcss_tones
+                    decode_items = Constants.ctcss_tones
 
             encode_cbx.addItems(encode_items)
             decode_cbx.addItems(decode_items)
@@ -905,7 +860,9 @@ class MainWindow(QMainWindow):
         self.setFrequencyInfo(1, info)
     def setFrequencyInfo(self, info):
         self.device.setBandFrequencyInfo(info)
+# ---------- MainWindow Class ---------- #
 
+# ---------- AboutDialog Class ---------- #
 class AboutDialog(QDialog):
 
     def __init__(self, parent: MainWindow=None):
@@ -915,8 +872,12 @@ class AboutDialog(QDialog):
         self.ui = Ui_AboutDialog()
         self.ui.setupUi(self)
 
-        self.ui.closeBtn.clicked.connect(self.hide)
+        self.ui.label_3.setPixmap(QPixmap(os.path.join(Constants.getBaseDir(), 'icon.png')))
 
+        self.ui.closeBtn.clicked.connect(self.hide)
+# ---------- AboutDialog Class ---------- #
+
+# ---------- ComPortDialog Class ---------- #
 class ComPortDialog(QDialog):
 
     parent: MainWindow = None
@@ -947,4 +908,4 @@ class ComPortDialog(QDialog):
     def connectDevice(self):
         self.parent.connectDevice(self.serial_list[self.ui.portCbx.currentIndex()].portName())
         self.hide()
-        
+# ---------- ComPortDialog Class ---------- #

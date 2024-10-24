@@ -24,29 +24,33 @@ Contact: k7dmg@protonmail.com
 Dependencies: PySide6==6.7.1, PySide6_Addons==6.7.1, PySide6_Essentials==6.7.1
 """
 
-import sys, logging
+import sys, logging, os
 from PySide6.QtGui import QIcon, QPalette
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QApplication
-from UI.MainWindow import MainWindow
+from UI.MainWindow import MainWindow, Constants
 
 # os.chdir(sys.path[0])
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     try:
+        if not os.path.exists(Constants.getProgramDir()):
+            os.mkdir(Constants.getProgramDir())
+
         FORMAT = '%(asctime)s %(message)s'
-        logging.basicConfig(filename='connection.log', level=logging.INFO, format=FORMAT)
+        logging.basicConfig(filename=os.path.join(Constants.getProgramDir(), 'connection.log'), level=logging.INFO, format=FORMAT)
         app = QApplication(sys.argv)
 
         is_dark_mode = app.palette().color(QPalette.Window).lightness() < 128
 
+        
         app_icon = QIcon()
-        app_icon.addFile(f'./icon.png', QSize(16,16))
-        app_icon.addFile(f'./icon.png', QSize(24,24))
-        app_icon.addFile(f'./icon.png', QSize(32,32))
-        app_icon.addFile(f'./icon.png', QSize(48,48))
-        app_icon.addFile(f'./icon.png', QSize(256,256))
+        app_icon.addFile(os.path.join(Constants.getBaseDir(), 'icon.png'), QSize(16,16))
+        app_icon.addFile(os.path.join(Constants.getBaseDir(), 'icon.png'), QSize(24,24))
+        app_icon.addFile(os.path.join(Constants.getBaseDir(), 'icon.png'), QSize(32,32))
+        app_icon.addFile(os.path.join(Constants.getBaseDir(), 'icon.png'), QSize(48,48))
+        app_icon.addFile(os.path.join(Constants.getBaseDir(), 'icon.png'), QSize(256,256))
         app.setWindowIcon(app_icon)
         
         widget = MainWindow()
