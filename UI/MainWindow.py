@@ -36,6 +36,7 @@ from UI.windows.ui_about_dialog import Ui_AboutDialog
 
 logger = logging.getLogger(__name__)
 config_file_path = os.path.join(Constants.getProgramDir(), 'config.cfg')
+memory_name_file = os.path.join(Constants.getProgramDir(), "channel_memory.json")
 
 # ---------- MouseClickEventFilter Class ---------- #
 class MouseClickEventFilter(QObject):
@@ -130,13 +131,12 @@ class MainWindow(QMainWindow):
 
         #Band UI
         mem_names = [''] * 1000
-        if os.path.exists("channel_memory.json"):
-            with open("channel_memory.json", 'r') as f:
+        if os.path.exists(memory_name_file):
+            with open(memory_name_file, 'r') as f:
                 mem_names = json.loads(f.read())
         tone_types = ['Off', 'Tone', 'CTCSS', 'DCS', 'Cross']
         power_arr = ["High", "Medium", "Low", "Extra Low"]
         memory_mode_arr = ["VFO", "Memory", "Call", "DV"]
-        modulation_mode_arr = ["FM", "DV", "AM", "LSB", "USB", "CW", "NFM", "DR", "WFM", "R-CW"]
         cross_code_types = ['DCS/Off', 'Tone/DCS', 'DCS/CTCSS', 'Tone/CTCSS']
 
         for i in range(999):
@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
         self.ui.bandAToneCbx.addItems(tone_types)
         self.ui.bandAPwrCbx.addItems(power_arr)
         self.ui.bandAMemoryModeCbx.addItems(memory_mode_arr)
-        self.ui.bandAModeCbx.addItems(modulation_mode_arr)
+        self.ui.bandAModeCbx.addItems(["FM", "DV", "DR"])
         self.ui.bandACrossCbx.addItems(cross_code_types)
 
         #Band B UI
@@ -158,7 +158,7 @@ class MainWindow(QMainWindow):
         self.ui.bandBToneCbx.addItems(tone_types)
         self.ui.bandBPwrCbx.addItems(power_arr)
         self.ui.bandBMemoryModeCbx.addItems(memory_mode_arr)
-        self.ui.bandBModeCbx.addItems(modulation_mode_arr)
+        self.ui.bandBModeCbx.addItems(["FM", "DV", "AM", "LSB", "USB", "CW", "NFM", "DR", "WFM", "R-CW"])
         self.ui.bandBCrossCbx.addItems(cross_code_types)
 
         # Radio Settings UI Signals
@@ -527,6 +527,8 @@ class MainWindow(QMainWindow):
     def setMemoryMode(self, mode, band):
         if self.device != None: self.device.setMemoryMode(mode, band)
     def updateMemoryMode(self, band, mode_idx):
+
+        # Band A
         if band == 0:
             self.ui.bandAMemoryModeCbx.blockSignals(True)
             self.ui.bandAMemoryModeCbx.setCurrentIndex(mode_idx)
@@ -534,15 +536,25 @@ class MainWindow(QMainWindow):
 
             if mode_idx == 0:
                 self.ui.bandAFreqText.setEnabled(True)
-                # self.ui.bandAChannelCbx.setEnabled(False)
+                self.ui.bandAModeCbx.setEnabled(True)
+                self.ui.bandAToneCbx.setEnabled(True)
+                self.ui.bandACrossCbx.setEnabled(True)
+                self.ui.bandAEncodeCbx.setEnabled(True)
+                self.ui.bandADecodeCbx.setEnabled(True)
             else:
                 self.ui.bandAFreqText.setEnabled(False)
-                # self.ui.bandAChannelCbx.setEnabled(True)
+                self.ui.bandAModeCbx.setEnabled(False)
+                self.ui.bandAToneCbx.setEnabled(False)
+                self.ui.bandACrossCbx.setEnabled(False)
+                self.ui.bandAEncodeCbx.setEnabled(False)
+                self.ui.bandADecodeCbx.setEnabled(False)
 
             if mode_idx == 1:
                 self.ui.bandAChannelCbx.setEnabled(True)
             else:
                 self.ui.bandAChannelCbx.setEnabled(False)
+
+        # Band B
         else:
             self.ui.bandBMemoryModeCbx.blockSignals(True)
             self.ui.bandBMemoryModeCbx.setCurrentIndex(mode_idx)
@@ -550,10 +562,18 @@ class MainWindow(QMainWindow):
 
             if mode_idx == 0:
                 self.ui.bandBFreqText.setEnabled(True)
-                # self.ui.bandBChannelCbx.setEnabled(False)
+                self.ui.bandBModeCbx.setEnabled(True)
+                self.ui.bandBToneCbx.setEnabled(True)
+                self.ui.bandBCrossCbx.setEnabled(True)
+                self.ui.bandBEncodeCbx.setEnabled(True)
+                self.ui.bandBDecodeCbx.setEnabled(True)
             else:
                 self.ui.bandBFreqText.setEnabled(False)
-                # self.ui.bandBChannelCbx.setEnabled(True)
+                self.ui.bandBModeCbx.setEnabled(False)
+                self.ui.bandBToneCbx.setEnabled(False)
+                self.ui.bandBCrossCbx.setEnabled(False)
+                self.ui.bandBEncodeCbx.setEnabled(False)
+                self.ui.bandBDecodeCbx.setEnabled(False)
 
             if mode_idx == 1:
                 self.ui.bandBChannelCbx.setEnabled(True)
@@ -561,14 +581,22 @@ class MainWindow(QMainWindow):
                 self.ui.bandBChannelCbx.setEnabled(False)
 
     def setBandModeA(self):
-        self.device.setBandMode(self.ui.bandAModeCbx.currentIndex(), 0)
+        if self.ui.bandAModeCbx.currentIndex() == 2:
+            self.ui.bandAMemoryModeCbx.setCurrentIndex(3)
+        else:
+            self.device.setBandMode(self.ui.bandAModeCbx.currentIndex(), 0)
     def setBandModeB(self):
-        self.device.setBandMode(self.ui.bandBModeCbx.currentIndex(), 1)
+        if self.ui.bandBModeCbx.currentIndex() == 7:
+            self.ui.bandBMemoryModeCbx.setCurrentIndex(3)
+        else:
+            self.device.setBandMode(self.ui.bandBModeCbx.currentIndex(), 1)
     def setBandMode(self, mode, band):
         if self.device != None: self.device.setBandMode(mode, band)
     def updateBandMode(self, band, mode_idx):
         if band == 0:
             self.ui.bandAModeCbx.blockSignals(True)
+            if mode_idx == 7:
+                mode_idx = 2
             self.ui.bandAModeCbx.setCurrentIndex(mode_idx)
             self.ui.bandAModeCbx.blockSignals(False)
         else:

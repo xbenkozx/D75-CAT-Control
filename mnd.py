@@ -23,12 +23,13 @@ Contact: k7dmg@protonmail.com
 Dependencies: pyserial
 """
 
-import serial, json, argparse
+import serial, json, argparse, os
+from Constants import Constants
 from time import sleep
 
 mem_arr = []
 port = ""
-json_file_name = "channel_memory.json"
+json_file_name = os.path.join(Constants.getProgramDir(), "channel_memory.json")
 
 def waitCommand(ser, cmd):
     ser.write(cmd)
@@ -69,8 +70,6 @@ def dumpMemory():
             f.write(json.dumps(mem_arr))
     else:
         print("Dump Failed")
-
-
 
 if __name__ == "__main__":
     

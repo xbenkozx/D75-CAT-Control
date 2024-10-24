@@ -12,7 +12,14 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Build",
+            "name": "Compile",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "extras/compile.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Build UI",
             "type": "debugpy",
             "request": "launch",
             "program": "extras/pyside_builder.py",
