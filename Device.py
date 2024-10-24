@@ -20,11 +20,11 @@ License:
 
     You should have received a copy of the GNU General Public License along with D75 CAT Control. If not, see <https://www.gnu.org/licenses/>.
 Contact: k7dmg@protonmail.com
-Dependencies: PySide6==6.7.1, PySide6_Addons==6.7.1, PySide6_Essentials==6.7.1
+Dependencies: PySide6
 """
-
-from PySide6.QtCore import Signal, QObject, QIODevice, QTimer, QCoreApplication
-from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
+from time import sleep
+from PySide6.QtCore import Signal, QObject, QIODevice, QTimer
+from PySide6.QtSerialPort import QSerialPort
 
 # ---------- CATCommand Class ---------- #
 class CATCommand():
@@ -83,7 +83,6 @@ class ChannelFrequency():
     dstar_sq_code       = ""
 
     def __init__(self, data):
-        print(data)
         self.band               = int(data[0])
         self.frequency          = str(int(data[1][:4])) + '.' + data[1][4:7]
         self.offset             = str(int(data[2][:4])) + '.' + data[2][4:7]
@@ -213,6 +212,7 @@ class Device(QObject):
     CONNECTED           = 3
     FORCE_DISCONNECTED  = 4
 
+    timeout_period          = 2000
     ch_refresh_interval     = 1000
     verbose                 = False
     timeout_timer: QTimer   = None
@@ -286,6 +286,7 @@ class Device(QObject):
 
         if self.serial_conn.open(QIODevice.ReadWrite):
             self.serial_conn.setDataTerminalReady(True)
+            self.command_buffer = []
             self.getSerialNumber()
             self.getFWVersion()
             self.getModelID()
@@ -341,7 +342,7 @@ class Device(QObject):
     def writeData(self, data):
         if self.serial_conn.isOpen():
             self.timeout_timer.stop()
-            self.timeout_timer.start(2000)
+            self.timeout_timer.start(self.timeout_period)
 
             if self.verbose: print('W: ', data)
             self.last_command = self.command_buffer[0].split()[0]
@@ -349,14 +350,27 @@ class Device(QObject):
         else:
             self.command_buffer = []
     
+    serial_buffer = b''
     def __readyRead(self):
         self.status  = Device.CONNECTED
         self.timeout_timer.stop()
 
         data = self.serial_conn.readAll().data().strip()
 
+        if data.startswith(b'FO') and len(data) < 72:
+            self.serial_buffer = data
+        elif len(self.serial_buffer) > 0 and len(self.serial_buffer) < 72:
+            self.serial_buffer += data
+        
+        if len(self.serial_buffer) > 0 and len(self.serial_buffer) < 72:
+            return
+        elif len(self.serial_buffer) == 72:
+            data = self.serial_buffer
+            self.serial_buffer = b''
+
+        if (len(data)) == 0: return
         if(data == b'?'):
-            if len(self.command_buffer) > 0: 
+            if len(self.command_buffer) > 0:
                 if self.verbose: print("Invalid Command: " + str(self.command_buffer[0]))
                 self.command_buffer.pop(0)
         elif(data == b'N'):
@@ -365,7 +379,10 @@ class Device(QObject):
                 self.command_buffer.pop(0)
             
         else:
-            self.parseCommand(data)
+            try:
+                self.parseCommand(data)
+            except:
+                print("Parsing error:", data)
 
         if len(self.command_buffer) > 0 and self.last_command != None and data.startswith(self.command_buffer[0].split()[0]):
             self.command_buffer.pop(0)
@@ -483,6 +500,8 @@ class Device(QObject):
         elif command == CATCommand.OutputPower:
             self.update_output_power.emit(int(command_data[0]), int(command_data[1]))
 
+        elif command == CATCommand.BtnDown or command == CATCommand.BtnUp:
+            pass # Do nothing so it doesn't print out on console
         else:
             print(command, command_data)
 

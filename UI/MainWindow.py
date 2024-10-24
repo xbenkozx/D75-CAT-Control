@@ -20,12 +20,13 @@ License:
 
     You should have received a copy of the GNU General Public License along with D75 CAT Control. If not, see <https://www.gnu.org/licenses/>.
 Contact: k7dmg@protonmail.com
-Dependencies: PySide6==6.7.1, PySide6_Addons==6.7.1, PySide6_Essentials==6.7.1
+Dependencies: PySide6
 """
 
 import os, logging, configparser, json
+from time import sleep
 from PySide6.QtCore import QTimer, QObject, QEvent
-from PySide6.QtWidgets import QDialog, QMessageBox, QMainWindow, QComboBox, QVBoxLayout, QLabel, QHBoxLayout, QStatusBar
+from PySide6.QtWidgets import QApplication, QDialog, QMessageBox, QMainWindow, QComboBox, QVBoxLayout, QLabel, QHBoxLayout, QStatusBar
 from PySide6.QtSerialPort import QSerialPortInfo
 from UI.windows.ui_main_window import Ui_MainWindow
 from Device import Device, ChannelFrequency
@@ -186,7 +187,7 @@ class MainWindow(QMainWindow):
                 mem_names = json.loads(f.read())
         for i in range(999):
             ch_name = str(i).rjust(3,'0')
-            if len(mem_names[i]): ch_name += " - " + mem_names[i]
+            if len(mem_names[i]) > 0: ch_name += " - " + mem_names[i]
             self.ui.bandAChannelCbx.addItem(ch_name)
             self.ui.bandBChannelCbx.addItem(ch_name)
         self.ui.bandAChannelCbx.currentIndexChanged.connect(self.setMemChannelA)
@@ -268,21 +269,35 @@ class MainWindow(QMainWindow):
         self.disableUI()
 
         self.loadConfig()
+    def closeDevice(self):
+        self.device.command_buffer = []
+        self.device.serial_conn.clear()
+        self.device.serial_conn.close()
+        self.device = None
 
     def connectDevice(self, com_port=None):
         if self.ui.portConnectBtn.text() == "Disconnect":
             if self.device != None and self.device.serial_conn != None and self.device.serial_conn.isOpen():
+                self.device.setRealtimeFB(False)
                 self.disableUI()
-                self.device.serial_conn.close()
+                if len(self.device.command_buffer) > 0:
+                    QTimer.singleShot(100, self.closeDevice)
+                else:
+                    self.closeDevice()
                 self.ui.portConnectBtn.setText("Connect")
                 return
-        
+            
+
         if com_port == None or type(com_port) != str:
             com_port = self.port_name
 
+        self.ui.portConnectBtn.setEnabled(False)
+        self.ui.portConnectBtn.setText("Connecting")
+        QApplication.processEvents()
         self.device = Device(com_port)
         self.device.verbose = self.verbose
         if(self.device.initConnection()):
+            
             self.port_name = com_port
             self.status_bar_conn_status.setText(f"{self.port_name}: Connected")
 
@@ -314,9 +329,11 @@ class MainWindow(QMainWindow):
             self.ui.portConnectBtn.setText("Disconnect")
             self.enableUI()
         else:
+            self.ui.portConnectBtn.setText("Connect")
             self.errorOccurred("Could not connect to device", "COM Port Error")
             self.status_bar_conn_status.setText(f"{self.port_name}: Error")
             # self.device.getBand()
+        self.ui.portConnectBtn.setEnabled(True)
 
     def loadConfig(self):
         if os.path.isfile(config_file_path):
@@ -332,7 +349,7 @@ class MainWindow(QMainWindow):
             if config['SERIAL']['port'] != "":
                 self.port_name =  config['SERIAL']['port']
                 self.status_bar_conn_status.setText(f"{self.port_name}: Not Connected")
-                if self.autoconnect: self.connectDevice(config['SERIAL']['port'])
+                
 
     def saveConfig(self):
         config = configparser.ConfigParser()
@@ -348,10 +365,14 @@ class MainWindow(QMainWindow):
         with open(config_file_path, 'w') as configfile:
             config.write(configfile)
     
+    def showEvent(self, event):
+        QApplication.processEvents()
+        if self.autoconnect: QTimer.singleShot(10, lambda: self.connectDevice(self.port_name))
+        
     def closeEvent(self, event):
         if self.device != None and self.device.serial_conn != None and self.device.serial_conn.isOpen():
             self.device.setRealtimeFB(False)
-            QTimer.singleShot(500, self.__close)
+            QTimer.singleShot(100, self.__close)
             event.ignore()
     def __close(self):
         if self.device != None and self.device.serial_conn != None and self.device.serial_conn.isOpen():
@@ -452,8 +473,8 @@ class MainWindow(QMainWindow):
 
     #SLOTS
     def errorOccurred(self, message, title="Error"):
-        if self.device != None and self.device.serial_conn != None and self.device.serial_conn.isOpen():
-                self.device.serial_conn.close()
+        if self.device != None:
+            self.closeDevice()
         self.disableUI()
         self.ui.portConnectBtn.setText("Connect")
         self.status_bar_conn_status.setText(f"{self.port_name}: Error")

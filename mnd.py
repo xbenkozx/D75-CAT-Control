@@ -20,10 +20,11 @@ License:
 
     You should have received a copy of the GNU General Public License along with D75 CAT Control. If not, see <https://www.gnu.org/licenses/>.
 Contact: k7dmg@protonmail.com
-Dependencies: PySide6==6.7.1, PySide6_Addons==6.7.1, PySide6_Essentials==6.7.1
+Dependencies: pyserial
 """
 
 import serial, json, argparse
+from time import sleep
 
 mem_arr = []
 port = ""
@@ -31,6 +32,7 @@ json_file_name = "channel_memory.json"
 
 def waitCommand(ser, cmd):
     ser.write(cmd)
+    sleep(.01)
     # print("MCP:", cmd)
     while True:
         d75_data = ser.read_all()
@@ -59,11 +61,14 @@ def dumpMemory():
             print("=", end='', flush=True)
     waitCommand(d75, b'E')
     print('')
+    mem_arr = mem_arr[:-8]
+    print(len(mem_arr))
 
-    mems = mem_arr[:-8]
-
-    with open(json_file_name, 'w') as f:
-        f.write(json.dumps(mems))
+    if len(mem_arr) == 1000:
+        with open(json_file_name, 'w') as f:
+            f.write(json.dumps(mem_arr))
+    else:
+        print("Dump Failed")
 
 
 
