@@ -33,7 +33,12 @@ Some additional settings can be set in the config.cfg file. The config file can 
 | DEBUG   | verbose     | False        | Set to True if you want all data sent and received<br/>to print to console. |
 |||||
 
+# Compiling an EXE
+For Windows users, you can compile a single file EXE. You can build it by running the following command from the main project directory. 
 
+    pyinstaller -y d75_cat_control.spec
+
+Once complete, you will find your EXE in the <i>dist</i> folder.
 
 
 ## Future Development
