@@ -762,25 +762,63 @@ class Ui_MainWindow(object):
         self.widget_31.setObjectName(u"widget_31")
         self.horizontalLayout_16 = QHBoxLayout(self.widget_31)
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.label_14 = QLabel(self.widget_31)
+        self.label_14.setObjectName(u"label_14")
+        font5 = QFont()
+        font5.setPointSize(12)
+        self.label_14.setFont(font5)
+
+        self.horizontalLayout_16.addWidget(self.label_14)
+
         self.gpsLatLbl = QLabel(self.widget_31)
         self.gpsLatLbl.setObjectName(u"gpsLatLbl")
+        self.gpsLatLbl.setMinimumSize(QSize(200, 0))
+        self.gpsLatLbl.setFont(font2)
 
         self.horizontalLayout_16.addWidget(self.gpsLatLbl)
 
+        self.label_16 = QLabel(self.widget_31)
+        self.label_16.setObjectName(u"label_16")
+        self.label_16.setFont(font5)
+
+        self.horizontalLayout_16.addWidget(self.label_16)
+
         self.gpsLonLbl = QLabel(self.widget_31)
         self.gpsLonLbl.setObjectName(u"gpsLonLbl")
+        self.gpsLonLbl.setMinimumSize(QSize(200, 0))
+        self.gpsLonLbl.setFont(font2)
 
         self.horizontalLayout_16.addWidget(self.gpsLonLbl)
 
+        self.label_17 = QLabel(self.widget_31)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setFont(font5)
+
+        self.horizontalLayout_16.addWidget(self.label_17)
+
         self.gpsAltLbl = QLabel(self.widget_31)
         self.gpsAltLbl.setObjectName(u"gpsAltLbl")
+        self.gpsAltLbl.setMinimumSize(QSize(100, 0))
+        self.gpsAltLbl.setFont(font2)
 
         self.horizontalLayout_16.addWidget(self.gpsAltLbl)
 
+        self.label_18 = QLabel(self.widget_31)
+        self.label_18.setObjectName(u"label_18")
+        self.label_18.setFont(font5)
+
+        self.horizontalLayout_16.addWidget(self.label_18)
+
         self.gpsSpeedLbl = QLabel(self.widget_31)
         self.gpsSpeedLbl.setObjectName(u"gpsSpeedLbl")
+        self.gpsSpeedLbl.setMinimumSize(QSize(100, 0))
+        self.gpsSpeedLbl.setFont(font2)
 
         self.horizontalLayout_16.addWidget(self.gpsSpeedLbl)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_16.addItem(self.horizontalSpacer_7)
 
 
         self.verticalLayout.addWidget(self.widget_31)
@@ -852,9 +890,13 @@ class Ui_MainWindow(object):
         self.bandBMemoryModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"VFO", None))
         self.bandBModeCbx.setPlaceholderText(QCoreApplication.translate("MainWindow", u"FM", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"GPS Data", None))
-        self.gpsLatLbl.setText(QCoreApplication.translate("MainWindow", u"LAT:", None))
-        self.gpsLonLbl.setText(QCoreApplication.translate("MainWindow", u"LON:", None))
-        self.gpsAltLbl.setText(QCoreApplication.translate("MainWindow", u"ALT:", None))
-        self.gpsSpeedLbl.setText(QCoreApplication.translate("MainWindow", u"SPD:", None))
+        self.label_14.setText(QCoreApplication.translate("MainWindow", u"LAT:", None))
+        self.gpsLatLbl.setText(QCoreApplication.translate("MainWindow", u"0.0", None))
+        self.label_16.setText(QCoreApplication.translate("MainWindow", u"LON:", None))
+        self.gpsLonLbl.setText(QCoreApplication.translate("MainWindow", u"0.0", None))
+        self.label_17.setText(QCoreApplication.translate("MainWindow", u"ALT:", None))
+        self.gpsAltLbl.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label_18.setText(QCoreApplication.translate("MainWindow", u"SPD:", None))
+        self.gpsSpeedLbl.setText(QCoreApplication.translate("MainWindow", u"0", None))
     # retranslateUi
 

@@ -1334,7 +1334,7 @@
      <widget class="QWidget" name="widget_31" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_16">
        <item>
-        <widget class="QLabel" name="gpsLatLbl">
+        <widget class="QLabel" name="label_14">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -1346,7 +1346,26 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="gpsLonLbl">
+        <widget class="QLabel" name="gpsLatLbl">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>0.0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_16">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -1358,7 +1377,26 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="gpsAltLbl">
+        <widget class="QLabel" name="gpsLonLbl">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>0.0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_17">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -1370,7 +1408,26 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="gpsSpeedLbl">
+        <widget class="QLabel" name="gpsAltLbl">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_18">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -1380,6 +1437,38 @@
           <string>SPD:</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gpsSpeedLbl">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

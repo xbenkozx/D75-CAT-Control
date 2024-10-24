@@ -449,10 +449,10 @@ class MainWindow(QMainWindow):
         self.ui.bandBWidget.setStyleSheet("")
 
 
-        self.ui.gpsLatLbl.setText(f"LAT:")
-        self.ui.gpsLonLbl.setText(f"LON:")
-        self.ui.gpsAltLbl.setText(f"ALT:")
-        self.ui.gpsSpeedLbl.setText(f"SPD:")
+        self.ui.gpsLatLbl.setText('')
+        self.ui.gpsLonLbl.setText('')
+        self.ui.gpsAltLbl.setText('')
+        self.ui.gpsSpeedLbl.setText('')
 
 
     #SLOTS
@@ -477,15 +477,15 @@ class MainWindow(QMainWindow):
             self.ui.bandBMeter.setValue(level)
     def updateGPSData(self, gps_data: GPSData):
         if gps_data.isValid():
-            self.ui.gpsLatLbl.setText(f"LAT: {gps_data.getLatitude()}")
-            self.ui.gpsLonLbl.setText(f"LON: {gps_data.getLongitude()}")
-            self.ui.gpsAltLbl.setText(f"ALT: {gps_data.getAltitude(self.gps_alt_format)} {'ft' if self.gps_alt_format == 'I' else 'm'}")
-            self.ui.gpsSpeedLbl.setText(f"SPD: {gps_data.getSpeed(self.gps_speed_format)} {'mph' if self.gps_speed_format == 'I' else 'kt'}")
+            self.ui.gpsLatLbl.setText(gps_data.getLatitude())
+            self.ui.gpsLonLbl.setText(gps_data.getLongitude())
+            self.ui.gpsAltLbl.setText(f"{gps_data.getAltitude(self.gps_alt_format)} {'ft' if self.gps_alt_format == 'I' else 'm'}")
+            self.ui.gpsSpeedLbl.setText(f"{gps_data.getSpeed(self.gps_speed_format)} {'mph' if self.gps_speed_format == 'I' else 'kt'}")
         else:
-            self.ui.gpsLatLbl.setText(f"LAT:")
-            self.ui.gpsLonLbl.setText(f"LON:")
-            self.ui.gpsAltLbl.setText(f"ALT:")
-            self.ui.gpsSpeedLbl.setText(f"SPD:")
+            self.ui.gpsLatLbl.setText('')
+            self.ui.gpsLonLbl.setText('')
+            self.ui.gpsAltLbl.setText('')
+            self.ui.gpsSpeedLbl.setText('')
     
     def setDualBand(self):
         if self.device != None: self.device.setDualSingleBand(self.ui.bandControlCbx.currentIndex())
@@ -559,6 +559,12 @@ class MainWindow(QMainWindow):
         self.ui.gpsPcOutChbx.blockSignals(True)
         self.ui.gpsPcOutChbx.setChecked(pc_out)
         self.ui.gpsPcOutChbx.blockSignals(False)
+
+        if not enabled:
+            self.ui.gpsLatLbl.setText('')
+            self.ui.gpsLonLbl.setText('')
+            self.ui.gpsAltLbl.setText('')
+            self.ui.gpsSpeedLbl.setText('')
 
     def setMemoryModeA(self):
         self.setMemoryMode(self.ui.bandAMemoryModeCbx.currentIndex(), 0)

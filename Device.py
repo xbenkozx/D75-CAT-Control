@@ -512,7 +512,11 @@ class Device(QObject):
         elif command == CATCommand.OutputPower:
             self.update_output_power.emit(int(command_data[0]), int(command_data[1]))
 
-        elif command == CATCommand.BtnDown or command == CATCommand.BtnUp:
+        elif (
+            command == CATCommand.BtnDown 
+            or command == CATCommand.BtnUp 
+            or command == CATCommand.Beacon
+            ):
             pass # Do nothing so it doesn't print out on console
         else:
             print(command, command_data)
