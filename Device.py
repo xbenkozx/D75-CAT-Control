@@ -233,6 +233,8 @@ class Device(QObject):
     band_idx                = 2
     band_a_squelch          = 0
     band_b_squelch          = 0
+    serial_buffer           = b''
+    gps_data: GPSData       = None
 
     error_occurred          = Signal(str, str)
     update_model_id         = Signal(str)
@@ -354,9 +356,6 @@ class Device(QObject):
             self.serial_conn.write(data)
         else:
             self.command_buffer = []
-    
-    serial_buffer = b''
-    gps_data: GPSData = None
 
     def __readyRead(self):
         self.status  = Device.CONNECTED
