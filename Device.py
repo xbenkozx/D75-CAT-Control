@@ -325,14 +325,14 @@ class Device(QObject):
             self.getOutputPower(1)
             self.getBandFrequencyInfo(1)
 
-            # self.refresh_timer.start()
+            self.refresh_timer.start()
             return True
         
         print("Failed to connect to device!")
         return False
     def serialPortError(self, error):
         if error == QSerialPort.SerialPortError.ResourceError or error == QSerialPort.SerialPortError.DeviceNotFoundError:
-            print("error")
+            self.refresh_timer.stop()
             self.error_occurred.emit("Device not found.", "Serial Port Error")
                 
     def write(self, cmd, payload=None):
